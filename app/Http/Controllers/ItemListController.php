@@ -2093,8 +2093,25 @@ class ItemListController extends Controller
                     ]);
                 }
 
+                $isQmarkORCertifireEnabled = isQmarkORCertifireEnabled();
+
+                $certificationFilter = $isQmarkORCertifireEnabled ? 1 : 0;
+
                 $IntumescentSeals_A = SettingIntumescentSeals2::select('setting_intumescentseals2.*','selected_intumescentseals2.id as selected_intumescentseals2_id','selected_intumescentseals2.*')->Join('selected_intumescentseals2', function($join): void {
                     $join->on('setting_intumescentseals2.id', '=', 'selected_intumescentseals2.intumescentseals2_id');
+                })
+                ->when($isQmarkORCertifireEnabled, function ($query) {
+                    $query->where(function ($q) {
+                        $q->where(function ($q1) {
+                            // Custom cores: only certification = 1
+                            $q1->whereIn('setting_intumescentseals2.configurableitems', [1, 2, 7])
+                            ->where('setting_intumescentseals2.Certification', 1);
+                        })
+                        ->orWhere(function ($q2) {
+                            // Other cores: certification = 0 or 1, so don't filter certification
+                            $q2->whereIn('setting_intumescentseals2.configurableitems', [4, 5, 6, 8, 9]);
+                        });
+                    });
                 })
                 ->wherein('selected_intumescentseals2.selected_intumescentseals2_user_id',$UserId)->where($getConditions)
                 ->whereRaw("FIND_IN_SET(?, REPLACE(customeleafTypes, ' ', '')) > 0", [$intumescentsealsleaftype])
@@ -2103,6 +2120,19 @@ class ItemListController extends Controller
 
                 $sql = SettingIntumescentSeals2::select('setting_intumescentseals2.*', 'selected_intumescentseals2.id as selected_intumescentseals2_id','selected_intumescentseals2.*')->Join('selected_intumescentseals2', function($join): void {
                     $join->on('setting_intumescentseals2.id', '=', 'selected_intumescentseals2.intumescentseals2_id');
+                })
+                ->when($isQmarkORCertifireEnabled, function ($query) {
+                    $query->where(function ($q) {
+                        $q->where(function ($q1) {
+                            // Custom cores: only certification = 1
+                            $q1->whereIn('setting_intumescentseals2.configurableitems', [1, 2, 7])
+                            ->where('setting_intumescentseals2.Certification', 1);
+                        })
+                        ->orWhere(function ($q2) {
+                            // Other cores: certification = 0 or 1, so don't filter certification
+                            $q2->whereIn('setting_intumescentseals2.configurableitems', [4, 5, 6, 8, 9]);
+                        });
+                    });
                 })
                 ->wherein('selected_intumescentseals2.selected_intumescentseals2_user_id',$UserId)
                 ->whereRaw("FIND_IN_SET(?, REPLACE(customeleafTypes, ' ', '')) > 0", [$intumescentsealsleaftype])
