@@ -166,6 +166,9 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
                     $specs[] = $this->row(['C' => $step['label'] ?? '', 'D' => $step['m2'] ?? '', 'E' => $step['costPerM2'] ?? '', 'H' => $step['total'] ?? ''], false);
                 }
             }
+
+            $specs[] = $this->row(['C' => 'OverPanel','H' => 'Total Cost'], true);
+            $specs[] = $this->row(['H' => $leaf['overpanelTotal'] ?? ''], false);
         }
 
         return $specs;

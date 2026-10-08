@@ -4689,12 +4689,12 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
 
         $breakdown = [
             'leaves' => [
-                buildLeafSetBreakdownEntry($request->leafWidth1, $request->leafHeightNoOP, $door_core1, $minCoreCode1, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps, $laminateSheetOptionsList),
+                buildLeafSetBreakdownEntry($request->leafWidth1, $request->leafHeightNoOP, $door_core1, $minCoreCode1, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps, $laminateSheetOptionsList,$request->overpanel),
             ],
         ];
 
         if($request->doorsetType == 'leaf_and_a_half'){
-            $breakdown['leaves'][] = buildLeafSetBreakdownEntry($request->leafWidth2, $request->leafHeightNoOP, $door_core2, $minCoreCode2, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps, $laminateSheetOptionsList);
+            $breakdown['leaves'][] = buildLeafSetBreakdownEntry($request->leafWidth2, $request->leafHeightNoOP, $door_core2, $minCoreCode2, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps, $laminateSheetOptionsList,$request->overpanel);
         }
 
         SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, breakdown: $breakdown);
@@ -4870,7 +4870,9 @@ function buildLeafSetFinishSteps($request, $SelectedOption, $finishRatePerM2, $l
 // finishing" formula — (leaf width/1000 + 0.05) x (leaf height/1000 + 0.05) x 2 faces, wastage
 // allowance confirmed against the client's own worked example (930x2062 -> 4.13952 m2) — only
 // exists in one place.
-function buildLeafSetBreakdownEntry($leafWidth, $leafHeight, $coreCost, $coreCode, $facingType, $facingRatePerM2, $lm, $thicknessCost, $unitcost1, $lippingCrossSection, array $finishSteps, array $laminateSheetOptions = []): array{
+// buildLeafSetBreakdownEntry($request->leafWidth1, $request->leafHeightNoOP, $door_core1, $minCoreCode1, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps, $laminateSheetOptionsList),
+
+function buildLeafSetBreakdownEntry($leafWidth, $leafHeight, $coreCost, $coreCode, $facingType, $facingRatePerM2, $lm, $thicknessCost, $unitcost1, $lippingCrossSection, array $finishSteps, array $laminateSheetOptions = [], $overpanel): array{
     $leafM2 = (($leafWidth / 1000) + 0.05) * (($leafHeight / 1000) + 0.05) * 2;
     $facingTotal = round($leafM2 * $facingRatePerM2, 2);
     $lippingTotal = round($lm * $thicknessCost, 2);
@@ -4886,6 +4888,8 @@ function buildLeafSetBreakdownEntry($leafWidth, $leafHeight, $coreCost, $coreCod
     }, $finishSteps);
 
     $finishTotal = round(array_sum(array_column($finishStepsWithTotals, 'total')), 2);
+
+    $overpanelTotal = (round($coreCost, 2) + $facingTotal + $lippingTotal + $finishTotal) / 2;
 
     return [
         'coreSizeCode' => $coreCode,
@@ -4903,7 +4907,8 @@ function buildLeafSetBreakdownEntry($leafWidth, $leafHeight, $coreCost, $coreCod
         'finishSteps' => $finishStepsWithTotals,
         'finishTotal' => $finishTotal,
         'laminateSheetOptions' => $laminateSheetOptions,
-        'totalLeafCost' => round($coreCost + $facingTotal + $lippingTotal + $finishTotal, 2),
+        'overpanelTotal' => $overpanelTotal,
+        'totalLeafCost' => round($coreCost + $facingTotal + $lippingTotal + $finishTotal + $overpanelTotal, 2),
     ];
 }
 
@@ -5047,12 +5052,12 @@ function buildLeafSetBreakdownOnly($request, $userIds): ?array{
 
     $breakdown = [
         'leaves' => [
-            buildLeafSetBreakdownEntry($request->leafWidth1, $request->leafHeightNoOP, $door_core1, $minCoreCode1, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps, $laminateSheetOptionsList),
+            buildLeafSetBreakdownEntry($request->leafWidth1, $request->leafHeightNoOP, $door_core1, $minCoreCode1, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps, $laminateSheetOptionsList, $request->overpanel),
         ],
     ];
 
     if($request->doorsetType == 'leaf_and_a_half'){
-        $breakdown['leaves'][] = buildLeafSetBreakdownEntry($request->leafWidth2, $request->leafHeightNoOP, $door_core2, $minCoreCode2, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps, $laminateSheetOptionsList);
+        $breakdown['leaves'][] = buildLeafSetBreakdownEntry($request->leafWidth2, $request->leafHeightNoOP, $door_core2, $minCoreCode2, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps, $laminateSheetOptionsList, $request->overpanel);
     }
 
     return $breakdown;
