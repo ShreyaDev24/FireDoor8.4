@@ -2704,3 +2704,52 @@ function doorPlug1_2($FireRating,$IronmongerySet,$Leaf1VisionPanel,$id,$isBorder
 
     return $Tbl;
 }
+
+// Client rule (2026-09-02 for the Excel export, extended to the BOM PDF 2026-10-08): a Door Details
+// row's Unit Cost / Total Cost / Unit Price Sell / GT Sell Price is whatever the stored Breakdown
+// adds up to (core + facing + lipping + finish + overpanel), with the row's own margin applied on
+// top — NOT the figure LeafSetBesPoke() saved, which omits the overpanel share. This is a display
+// override only: nothing here writes back to bom_calculations. Shared by DoorTypeSheet (Excel) and
+// DoorSchedule/BOM/LeafSetBespoke.blade.php (PDF/HTML) so the two can't drift apart again.
+
+// Pull the per-leaf array out of a bom_calculations.Breakdown value, which may arrive as the raw
+// JSON string from the row or as an already-decoded array.
+function leafSetBespokeBreakdownLeaves($breakdown): array {
+    if (is_array($breakdown)) {
+        return $breakdown['leaves'] ?? $breakdown;
+    }
+
+    $decoded = json_decode((string) $breakdown, true);
+
+    return is_array($decoded) ? ($decoded['leaves'] ?? []) : [];
+}
+
+// Returns null when the row carries no usable breakdown, so callers fall back to the stored values.
+function leafSetBespokeDisplayTotals(array $leaves, $quantity, $rawMargin): ?array {
+    if (empty($leaves)) {
+        return null;
+    }
+
+    // totalLeafCost is computed once, authoritatively, in buildLeafSetBreakdownEntry()
+    // (common_helper.php). Re-deriving it from facingTotal/finishTotal here would double-count a
+    // Laminate leaf that has both a generic facing rate and a matched sheet price.
+    $unitCost = round(array_sum(array_map(static fn ($leaf) => (float) ($leaf['totalLeafCost'] ?? 0), $leaves)), 2);
+    $qty = is_numeric($quantity) ? (float) $quantity : 1.0;
+    $totalCost = round($unitCost * $qty, 2);
+
+    $marginPercent = (float) rtrim(trim((string) $rawMargin), '%');
+    if ($marginPercent < 0 || $marginPercent >= 100) {
+        $marginPercent = 0.0;
+    }
+
+    $sell = static fn (float $cost): float => $marginPercent > 0
+        ? round($cost / (1 - $marginPercent / 100), 2)
+        : $cost;
+
+    return [
+        'unitCost' => $unitCost,
+        'totalCost' => $totalCost,
+        'unitPriceSell' => $sell($unitCost),
+        'gtSellPrice' => $sell($totalCost),
+    ];
+}

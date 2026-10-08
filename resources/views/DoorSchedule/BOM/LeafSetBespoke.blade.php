@@ -38,8 +38,23 @@
 </tr>
 @endif
 @php
-$total = $total + $value->TotalCost;
-$GTSellPrice = $GTSellPrice + $value->GTSellPrice;
+// Same display-layer override the Excel export applies: when the row carries a stored Breakdown,
+// its money columns come from that breakdown (core + facing + lipping + finish + overpanel) rather
+// than the UnitCost LeafSetBesPoke() saved, which leaves the overpanel share out. Without this the
+// PDF under-reports every door that has an overpanel against the spreadsheet. Rows with no stored
+// breakdown (older saved quotations) keep their saved figures.
+$breakdownTotals = leafSetBespokeDisplayTotals(
+    leafSetBespokeBreakdownLeaves($value->Breakdown ?? null),
+    $value->QuantityOfDoorTypes,
+    $value->Margin
+);
+$rowUnitCost = $breakdownTotals['unitCost'] ?? $value->UnitCost;
+$rowTotalCost = $breakdownTotals['totalCost'] ?? round($value->UnitCost * $value->QuantityOfDoorTypes, 2);
+$rowUnitPriceSell = $breakdownTotals['unitPriceSell'] ?? $value->UnitPriceSell;
+$rowGTSellPrice = $breakdownTotals['gtSellPrice'] ?? $value->GTSellPrice;
+
+$total = $total + $rowTotalCost;
+$GTSellPrice = $GTSellPrice + $rowGTSellPrice;
 $words = explode("|", $value->Description);
 @endphp
 <tr>
@@ -51,10 +66,10 @@ $words = explode("|", $value->Description);
         <td colspan="2"> {{ isset($words[5]) ? $words[5] : '' }} </td>
     <td>{{ $value->QuantityOfDoorTypes }}</td>
     <td>{{$value->Unit}}</td>
-    <td>{{ $currency }}{{$value->UnitCost}}</td>
-    <td>{{ $currency }}{{ round($value->UnitCost * $value->QuantityOfDoorTypes,2) }}</td>
-    <td>{{ $currency }}{{$value->UnitPriceSell}}</td>
-    <td>{{ $currency }}{{$value->GTSellPrice}}</td>
+    <td>{{ $currency }}{{ $rowUnitCost }}</td>
+    <td>{{ $currency }}{{ $rowTotalCost }}</td>
+    <td>{{ $currency }}{{ $rowUnitPriceSell }}</td>
+    <td>{{ $currency }}{{ $rowGTSellPrice }}</td>
     <td>{{$value->Margin}}%</td>
 </tr>
 
@@ -75,7 +90,7 @@ global $LeafSetBesPokestotalGTSell;
     <td></td>
     <td>{{ $currency }}{{ round($total,2) }}</td>
     <td></td>
-    <td>{{ $currency }}{{ $GTSellPrice }}</td>
+    <td>{{ $currency }}{{ round($GTSellPrice,2) }}</td>
     <td></td>
 </tr>
 @endif

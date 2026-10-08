@@ -1259,9 +1259,21 @@ class BOMController extends Controller
         $GTSellPriceSum = 0;
         foreach($data as $value){
             if($value->Category != 'Ironmongery&MachiningCosts'){
-                $GTSellPriceSum += $value->GTSellPrice;
+                // Door Details rows are shown from their stored Breakdown (see
+                // LeafSetBespoke.blade.php), so the headline Calculated Sale Price has to be built
+                // the same way or it won't match the section total printed above it.
+                $breakdownTotals = $value->Category === 'LeafSetBesPoke'
+                    ? leafSetBespokeDisplayTotals(
+                        leafSetBespokeBreakdownLeaves($value->Breakdown ?? null),
+                        $value->QuantityOfDoorTypes,
+                        $value->Margin
+                    )
+                    : null;
+
+                $GTSellPriceSum += $breakdownTotals['gtSellPrice'] ?? $value->GTSellPrice;
             }
         }
+        $GTSellPriceSum = round($GTSellPriceSum, 2);
 
         $pdf = PDF::loadView('DoorSchedule.BOM.BOM_pdf',['data' => $data, 'quotation' => $quotation, 'currency' => $currency, 'laborCost' => $laborCost, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet, 'item_details' => $item_details, 'GTSellPriceSum' => $GTSellPriceSum,'itemPriceOverRidden' => $itemPriceOverRidden]);
 
