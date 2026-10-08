@@ -4681,8 +4681,8 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
         }
 
         // Client-facing "show your work" breakdown for the Door Details BOM sheet: real facing/finish
-        // m2, lipping cross-section, and the matched slab code. Display-only — none of this feeds
-        // $unit_cost above, so existing pricing is untouched.
+        // m2, lipping cross-section, and the matched slab code. Since 2026-10-08 this is also what
+        // the leaf set is PRICED at — see the $unit_cost assignment below the breakdown.
         $finishSteps = buildLeafSetFinishSteps($request, $SelectedOption, $finishRatePerM2, $laminateSheetMatch);
         $lippingCrossSection = ($lippingThickness * $request->doorThickness) / 1000000;
         $laminateSheetOptionsList = $laminateSheetMatch ? laminateSheetOptions($request->doorLeafFacingValue, $request->doorLeafFinish, $minWidth1, $minHeight1) : [];
@@ -4696,6 +4696,15 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
         if($request->doorsetType == 'leaf_and_a_half'){
             $breakdown['leaves'][] = buildLeafSetBreakdownEntry($request->leafWidth2, $request->leafHeightNoOP, $door_core2, $minCoreCode2, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps, $laminateSheetOptionsList,$request->overpanel);
         }
+
+        // Client rule (2026-10-08): the quotation must charge exactly what the BOM prints for this
+        // door, so the price IS the breakdown total rather than the separate $unit_cost computed
+        // above. The two had drifted apart in two ways: $unit_cost has no overpanel term at all,
+        // and it costs the facing off $painted_cost — a linear ((height x 2) + 50) / 1000 — where
+        // the breakdown uses real leaf m2 with a 50mm trim allowance on each dimension. That left
+        // the Door Details section and the Doorset Price disagreeing on every door. Deriving both
+        // from one array makes them agree by construction instead of by coincidence.
+        $unit_cost = round(array_sum(array_column($breakdown['leaves'], 'totalLeafCost')), 2);
 
         SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, breakdown: $breakdown);
     }
