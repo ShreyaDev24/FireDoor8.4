@@ -52,55 +52,32 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
     /**
      * Client rule (2026-09-02): the Door Details row's own Unit Cost/Total Cost/Unit Price
      * Sell/GT Sell Price should be whatever the breakdown block underneath adds up to (core +
-     * facing + lipping + finish), with the row's existing margin applied on top — NOT the value
-     * LeafSetBesPoke() saved. This only changes what this one sheet DISPLAYS; it's a display-layer
-     * override applied to a copy of the row array, and never writes back to bom_calculations, so
-     * LeafSetBesPoke() and every other consumer of that data are completely unaffected.
+     * facing + lipping + finish + overpanel), with the row's existing margin applied on top — NOT
+     * the value LeafSetBesPoke() saved. This only changes what this sheet DISPLAYS; it's a
+     * display-layer override applied to a copy of the row array, and never writes back to
+     * bom_calculations, so LeafSetBesPoke() and every other consumer of that data are unaffected.
+     *
+     * The arithmetic lives in leafSetBespokeDisplayTotals() (project_helper.php) because the BOM
+     * PDF's Door Details row has to show exactly the same figures.
      */
     private function applyBreakdownTotals(array $section, int $rowIndex, array $dataRow): array
     {
-        $leaves = $section['breakdown'][$rowIndex] ?? [];
-        if (empty($leaves)) {
+        $totals = leafSetBespokeDisplayTotals(
+            $section['breakdown'][$rowIndex] ?? [],
+            $dataRow[8] ?? null,
+            $dataRow[14] ?? null
+        );
+
+        if ($totals === null) {
             return $dataRow;
         }
 
-        $unitCost = round(array_sum(array_map(fn ($leaf) => $this->leafTotal($leaf), $leaves)), 2);
-        $qty = is_numeric($dataRow[8] ?? null) ? (float) $dataRow[8] : 1.0;
-        $totalCost = round($unitCost * $qty, 2);
-        $marginPercent = $this->marginPercent($dataRow[14] ?? null);
-
-        $dataRow[10] = $unitCost;
-        $dataRow[11] = $totalCost;
-        $dataRow[12] = $this->sellPrice($unitCost, $marginPercent);
-        $dataRow[13] = $this->sellPrice($totalCost, $marginPercent);
+        $dataRow[10] = $totals['unitCost'];
+        $dataRow[11] = $totals['totalCost'];
+        $dataRow[12] = $totals['unitPriceSell'];
+        $dataRow[13] = $totals['gtSellPrice'];
 
         return $dataRow;
-    }
-
-    /**
-     * One leaf's core + facing (or matched Laminate sheet) + lipping + finish cost, added together
-     * — the same figure LeafSetBesPoke() would show as "Total Door Leaf Cost" before margin.
-     */
-    private function leafTotal(array $leaf): float
-    {
-        // totalLeafCost is already computed once, authoritatively, in buildLeafSetBreakdownEntry()
-        // (common_helper.php) as coreCost + facingTotal + lippingTotal + finishTotal — including
-        // the edge case where a Laminate leaf has BOTH a non-zero generic facing rate AND a matched
-        // sheet price (finishTotal). Re-deriving it here from facingTotal/finishTotal separately
-        // would double-count that case, so this reads the single stored value instead.
-        return (float) ($leaf['totalLeafCost'] ?? 0);
-    }
-
-    private function marginPercent($rawMargin): float
-    {
-        $numeric = (float) rtrim(trim((string) $rawMargin), '%');
-
-        return $numeric >= 0 && $numeric < 100 ? $numeric : 0.0;
-    }
-
-    private function sellPrice(float $cost, float $marginPercent): float
-    {
-        return $marginPercent > 0 ? round($cost / (1 - $marginPercent / 100), 2) : $cost;
     }
 
     /**
@@ -167,8 +144,18 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
                 }
             }
 
-            $specs[] = $this->row(['C' => 'OverPanel','H' => 'Total Cost'], true);
-            $specs[] = $this->row(['H' => $leaf['overpanelTotal'] ?? ''], false);
+            // No overpanel configured means no half-leaf charge and nothing to show. hasOverpanel
+            // is absent on breakdowns saved before it existed; those fall back to the cost itself
+            // being non-zero, which is what the old unconditional calculation always produced.
+            $overpanelTotal = $leaf['overpanelTotal'] ?? '';
+            $hasOverpanel = $leaf['hasOverpanel'] ?? ($overpanelTotal !== '' && (float) $overpanelTotal != 0.0);
+
+            if ($hasOverpanel) {
+                $specs[] = $this->row(['C' => 'OverPanel','H' => 'Total Cost'], true);
+                // Older saved breakdowns stored this unrounded (e.g. 93.815) — round on the way out
+                // so the sheet shows pence, same as every other Total Cost line above.
+                $specs[] = $this->row(['H' => $overpanelTotal === '' ? '' : round((float) $overpanelTotal, 2)], false);
+            }
         }
 
         return $specs;

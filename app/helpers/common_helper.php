@@ -4889,7 +4889,15 @@ function buildLeafSetBreakdownEntry($leafWidth, $leafHeight, $coreCost, $coreCod
 
     $finishTotal = round(array_sum(array_column($finishStepsWithTotals, 'total')), 2);
 
-    $overpanelTotal = (round($coreCost, 2) + $facingTotal + $lippingTotal + $finishTotal) / 2;
+    // The overpanel is costed as half a leaf, so it only applies when one is actually configured.
+    // Client rule (2026-10-08): a plain 'Overpanel' ONLY — a 'Fan_Light' does not carry this
+    // charge, even though the rest of this file treats the two as a pair everywhere else. The
+    // dropdown stores 'No' (or empty) when neither is selected. Without this gate every door
+    // carried a phantom half-leaf charge.
+    $hasOverpanel = $overpanel === 'Overpanel';
+    $overpanelTotal = $hasOverpanel
+        ? round((round($coreCost, 2) + $facingTotal + $lippingTotal + $finishTotal) / 2, 2)
+        : 0;
 
     return [
         'coreSizeCode' => $coreCode,
@@ -4907,6 +4915,7 @@ function buildLeafSetBreakdownEntry($leafWidth, $leafHeight, $coreCost, $coreCod
         'finishSteps' => $finishStepsWithTotals,
         'finishTotal' => $finishTotal,
         'laminateSheetOptions' => $laminateSheetOptions,
+        'hasOverpanel' => $hasOverpanel,
         'overpanelTotal' => $overpanelTotal,
         'totalLeafCost' => round($coreCost + $facingTotal + $lippingTotal + $finishTotal + $overpanelTotal, 2),
     ];
@@ -4934,6 +4943,9 @@ function itemToLeafSetBreakdownRequest(\App\Models\Item $item, $configurableitem
     $request->lippingType = $item->LippingType;
     $request->lippingThickness = $item->LippingThickness;
     $request->lippingSpecies = $item->LippingSpecies;
+    // buildLeafSetBreakdownEntry() gates the overpanel half-leaf charge on this; leaving it unset
+    // would silently cost every backfilled door as if it had no overpanel.
+    $request->overpanel = $item->Overpanel;
 
     return $request;
 }

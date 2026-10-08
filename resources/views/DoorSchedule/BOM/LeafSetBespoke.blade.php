@@ -38,11 +38,17 @@
         @endif
         @php
             $hasLeafSetRows = true;
-            $total = $total + $value->TotalCost;
-            $GTSellPrice = $GTSellPrice + $value->GTSellPrice;
+            // Same display-layer override the Excel export applies: when a row carries a stored
+            // Breakdown, its money columns come from that breakdown (core + facing + lipping +
+            // finish + overpanel) rather than the UnitCost LeafSetBesPoke() saved, which leaves the
+            // overpanel share out. The running totals have to use the same figures as the rows, or
+            // the section Total wouldn't add up to what's printed above it.
+            $rowTotals = leafSetBespokeRowTotals($value);
+            $total = $total + $rowTotals['totalCost'];
+            $GTSellPrice = $GTSellPrice + $rowTotals['gtSellPrice'];
             $words = explode('|', $value->Description);
         @endphp
-        @include('DoorSchedule.BOM.partials.leaf-set-bespoke-data-row', ['value' => $value, 'words' => $words, 'currency' => $currency])
+        @include('DoorSchedule.BOM.partials.leaf-set-bespoke-data-row', ['value' => $value, 'words' => $words, 'currency' => $currency, 'rowTotals' => $rowTotals])
     @endif
 @endforeach
 
@@ -79,11 +85,17 @@
         @endif
         @php
             $hasLeafSetRows = true;
-            $total = $total + $value->TotalCost;
-            $GTSellPrice = $GTSellPrice + $value->GTSellPrice;
+            // Same display-layer override the Excel export applies: when a row carries a stored
+            // Breakdown, its money columns come from that breakdown (core + facing + lipping +
+            // finish + overpanel) rather than the UnitCost LeafSetBesPoke() saved, which leaves the
+            // overpanel share out. The running totals have to use the same figures as the rows, or
+            // the section Total wouldn't add up to what's printed above it.
+            $rowTotals = leafSetBespokeRowTotals($value);
+            $total = $total + $rowTotals['totalCost'];
+            $GTSellPrice = $GTSellPrice + $rowTotals['gtSellPrice'];
             $words = explode('|', $value->Description);
         @endphp
-        @include('DoorSchedule.BOM.partials.leaf-set-bespoke-data-row', ['value' => $value, 'words' => $words, 'currency' => $currency])
+        @include('DoorSchedule.BOM.partials.leaf-set-bespoke-data-row', ['value' => $value, 'words' => $words, 'currency' => $currency, 'rowTotals' => $rowTotals])
     @endif
 @endforeach
 
@@ -102,7 +114,7 @@
         <td></td>
         <td>{{ $currency }}{{ round($total, 2) }}</td>
         <td></td>
-        <td>{{ $currency }}{{ $GTSellPrice }}</td>
+        <td>{{ $currency }}{{ round($GTSellPrice, 2) }}</td>
         <td></td>
     </tr>
 @endif
