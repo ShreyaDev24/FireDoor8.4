@@ -61,7 +61,7 @@ class CompanyController extends Controller
     public function list()
     {
         if (Auth::user()->UserType=='1') {
-            $data = Company::join('users','users.id','companies.UserId')->select('users.FirstName','users.LastName','users.UserEmail','users.UserPhone','companies.*')->where('UserType','2')->OrderBy('id','desc')->get();
+            $data = Company::join('users','users.id','companies.UserId')->select('users.FirstName','users.LastName','users.UserEmail','users.UserPhone','users.QMark','users.Certifire','companies.*')->where('UserType','2')->OrderBy('id','desc')->get();
             return view('Company.CompanyList',['data' => $data]);
         } elseif (Auth::user()->UserType=='2') {
             return redirect()->route('company/profile');
