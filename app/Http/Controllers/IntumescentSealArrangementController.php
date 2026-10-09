@@ -17,6 +17,8 @@ class IntumescentSealArrangementController extends Controller
     {
         $auth = auth()->user();
 
+        $isQmarkORCertifireEnabled = isQmarkORCertifireEnabled();
+
         $items = SettingIntumescentSeals2::leftJoin('selected_intumescentseals2 as s', function ($join) use ($auth) {
                 $join->on('setting_intumescentseals2.id', '=', 's.intumescentseals2_id')
                      ->where('s.selected_intumescentseals2_user_id', $auth->id);
@@ -27,16 +29,38 @@ class IntumescentSealArrangementController extends Controller
                 's.id as selectedId',
                 's.selected_cost'
             )
+            ->when($isQmarkORCertifireEnabled, function ($query) {
+                $query->where(function ($q) {
+                    $q->where(function ($q1) {
+                        // Custom cores: only certification = 1
+                        $q1->whereIn('setting_intumescentseals2.configurableitems', [1, 2, 7])
+                        ->where('setting_intumescentseals2.Certification', 1);
+                    })
+                    ->orWhere(function ($q2) {
+                        // Other cores: certification = 0 or 1, so don't filter certification
+                        $q2->whereIn('setting_intumescentseals2.configurableitems', [4, 5, 6, 8, 9]);
+                    });
+                });
+            })
             ->orderBy('setting_intumescentseals2.firerating', 'ASC')
             ->orderBy('setting_intumescentseals2.brand', 'ASC')
             ->orderBy('setting_intumescentseals2.intumescentSeals', 'ASC')
             ->get();
 
-        $items = $items->map(function ($item) {
+        $certificationFilter = $isQmarkORCertifireEnabled ? 1 : 0;
+
+        $items = $items->map(function ($item, $key) use ($certificationFilter) {
+
             $leafTypeIds = explode(',', (string) $item->customeleafTypes);
 
-            $leafTypes = DB::table('intumescent_seal_leaf_type')
-                ->whereIn('id', $leafTypeIds)
+            $leafTypesQuery = DB::table('intumescent_seal_leaf_type')
+                ->whereIn('id', $leafTypeIds);
+
+            if ($certificationFilter == 1 && in_array($item->configurableitems, [1, 2, 7])) {
+                $leafTypesQuery->where('certifiedStatus', 1);
+            }
+
+            $leafTypes = $leafTypesQuery
                 ->pluck('leaf_type_key')
                 ->toArray();
 
@@ -87,7 +111,9 @@ class IntumescentSealArrangementController extends Controller
             'FireOnly'            => 'required|array',
         ]);
 
-        DB::transaction(function () use ($request) {
+        $certificationFilter = isQmarkORCertifireEnabled() ? 1 : 0;
+
+        DB::transaction(function () use ($request, $certificationFilter) {
 
             $leafTypesString = is_array($request->customeleafTypes)
                 ? implode(',', $request->customeleafTypes)
@@ -109,6 +135,7 @@ class IntumescentSealArrangementController extends Controller
                     'Point2width'       => $request->Point2width,
                     'MeetingEdges'       => $request->MeetingEdges,
                     'FireOnly'          => $fireOnlyValue,
+                    'Certification'     => $certificationFilter,
                     'customeleafTypes'   => $leafTypesString,
                     'editBy'            => auth()->id(),
                 ]);
@@ -194,8 +221,9 @@ class IntumescentSealArrangementController extends Controller
 
 
         $seal = SettingIntumescentSeals2::findOrFail($id);
+        $certificationFilter = isQmarkORCertifireEnabled() ? 1 : 0;
 
-        DB::transaction(function () use ($request, $seal) {
+        DB::transaction(function () use ($request, $seal, $certificationFilter) {
 
             $leafTypesString = is_array($request->customeleafTypes)
                 ? implode(',', $request->customeleafTypes)
@@ -216,6 +244,7 @@ class IntumescentSealArrangementController extends Controller
                 'Point2width'       => $request->Point2width,
                 'MeetingEdges'       => $request->MeetingEdges,
                 'FireOnly'          => $request->FireOnly,
+                'Certification'     => $certificationFilter,
                 'customeleafTypes'   => $leafTypesString,
                 'editBy'            => auth()->id(),
             ]);

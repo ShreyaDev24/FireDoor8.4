@@ -19,6 +19,7 @@ class IntumescentSealsImport implements ToModel, WithHeadingRow
             'stredor'   => 8,
             'vicaima'   => 4,
         ];
+        $isQmarkORCertifireEnabled = 1; // Set this based on your application logic
 
         // Convert Excel value → lowercase (important)
         $configurableName = strtolower(trim($row['configurable_item'] ?? ''));
@@ -52,8 +53,9 @@ class IntumescentSealsImport implements ToModel, WithHeadingRow
                 'Point1width'       => $row['width1'] ?? null,
                 'Point2height'      => $row['height2'] ?? null,
                 'Point2width'       => $row['width2'] ?? null,
+                'Certification'       => $isQmarkORCertifireEnabled,
                 'FireOnly'          => $this->formatFireType($row['fireonly_type'] ?? null),
-                'customeleafTypes'  => $this->mapLeafTypes($row['leaf_type'] ?? null, $row['configurable_item'] ?? null),
+                'customeleafTypes'  => $this->mapLeafTypes($row['leaf_type'] ?? null, $row['configurable_item'] ?? null, $isQmarkORCertifireEnabled),
                 'frameTypes'        => $this->extractNumbers($row['frame'] ?? null),
                 'editBy'            => Auth::user()->id ?? null,
             ]);
@@ -70,7 +72,7 @@ class IntumescentSealsImport implements ToModel, WithHeadingRow
         return implode(',', $matches[0]);
     }
 
-    private function mapLeafTypes($value, $configurable)
+    private function mapLeafTypes($value, $configurable, $isQmarkORCertifireEnabled)
     {
         if (!$value) return null;
 
@@ -86,22 +88,53 @@ class IntumescentSealsImport implements ToModel, WithHeadingRow
 
         $map = [];
 
-        if ($configurable === 'halspan') {
-            $map = [
-                '1' => 7,
-                '2' => 8,
-                '3' => 9,
-            ];
-        }
-        if ($configurable === 'strebord') {
-            $map = [
-                '1' => 1,
-                '2' => 2,
-                '3A' => 3,
-                '3B' => 4,
-                '4A' => 5,
-                '4B' => 6,
-            ];
+        if ($configurable == 'halspan' || $configurable == 'Halspan') {
+            if($isQmarkORCertifireEnabled == 1){
+                $map = [
+                    '1' => 20,
+                    '2' => 21,
+                ];
+            }else{
+                $map = [
+                    '1' => 7,
+                    '2' => 8,
+                    '3' => 9,
+                ];
+            }
+        }else if ($configurable == 'strebord' || $configurable == 'Strebord') {
+            if($isQmarkORCertifireEnabled == 1){
+                $map = [
+                    '1' => 22,
+                    '2' => 23,
+                    'leaf type 1' => 22,
+                    'leaf type 2' => 23,
+                ];
+            }else{
+                $map = [
+                    '1' => 1,
+                    '2' => 2,
+                    '3A' => 3,
+                    '3B' => 4,
+                    '4A' => 5,
+                    '4B' => 6,
+                ];
+            }
+        }else if ($configurable == 'flamebreak' || $configurable == 'Flamebreak') {
+            if($isQmarkORCertifireEnabled == 1){
+                $map = [
+                    '1' => 24,
+                    '2' => 25,
+                    '3' => 26,
+                    '4' => 27,
+                    '5' => 28,
+                ];
+            }else{
+                $map = [
+                    '1' => 7,
+                    '2' => 8,
+                    '3' => 9,
+                ];
+            }
         }
 
         // Convert numbers → mapped values
