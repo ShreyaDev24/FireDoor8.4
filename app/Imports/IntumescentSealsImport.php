@@ -72,7 +72,7 @@ class IntumescentSealsImport implements ToModel, WithHeadingRow
         return implode(',', $matches[0]);
     }
 
-    private function mapLeafTypes($value, $configurable, $isQmarkORCertifireEnabled = false)
+    private function mapLeafTypes($value, $configurable, $isQmarkORCertifireEnabled)
     {
         if (!$value) return null;
 
@@ -88,11 +88,11 @@ class IntumescentSealsImport implements ToModel, WithHeadingRow
 
         $map = [];
 
-        if ($configurable === 'halspan' || $configurable === 'Halspan') {
-            if($isQmarkORCertifireEnabled === 1){
+        if ($configurable == 'halspan' || $configurable == 'Halspan') {
+            if($isQmarkORCertifireEnabled == 1){
                 $map = [
-                    'Leaf Type 1' => 20,
-                    'Leaf Type 2' => 21,
+                    '1' => 20,
+                    '2' => 21,
                 ];
             }else{
                 $map = [
@@ -101,16 +101,40 @@ class IntumescentSealsImport implements ToModel, WithHeadingRow
                     '3' => 9,
                 ];
             }
-        }
-        if ($configurable === 'strebord' || $configurable === 'Strebord') {
-            $map = [
-                '1' => 1,
-                '2' => 2,
-                '3A' => 3,
-                '3B' => 4,
-                '4A' => 5,
-                '4B' => 6,
-            ];
+        }else if ($configurable == 'strebord' || $configurable == 'Strebord') {
+            if($isQmarkORCertifireEnabled == 1){
+                $map = [
+                    '1' => 22,
+                    '2' => 23,
+                    'leaf type 1' => 22,
+                    'leaf type 2' => 23,
+                ];
+            }else{
+                $map = [
+                    '1' => 1,
+                    '2' => 2,
+                    '3A' => 3,
+                    '3B' => 4,
+                    '4A' => 5,
+                    '4B' => 6,
+                ];
+            }
+        }else if ($configurable == 'flamebreak' || $configurable == 'Flamebreak') {
+            if($isQmarkORCertifireEnabled == 1){
+                $map = [
+                    '1' => 24,
+                    '2' => 25,
+                    '3' => 26,
+                    '4' => 27,
+                    '5' => 28,
+                ];
+            }else{
+                $map = [
+                    '1' => 7,
+                    '2' => 8,
+                    '3' => 9,
+                ];
+            }
         }
 
         // Convert numbers → mapped values
