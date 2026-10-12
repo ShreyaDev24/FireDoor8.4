@@ -4595,13 +4595,13 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
         $doorLeafFacingCost = is_numeric($doorLeafFacingCost) ? (float)$doorLeafFacingCost : 0;
         $door_cost = is_numeric($door_cost) ? (float)$door_cost : 0;
         $unit_cost = ($door_core1) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
-        if($request->doorsetType == 'leaf_and_a_half'){
+        if($request->doorsetType == 'leaf_and_a_half' || $request->doorsetType == 'DD'){
             $unit_cost += ($door_core2) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
         }
 
         $description .= '|'.$door_core1.'|'.$lm.'|'.$thickness_cost.'|'. $request->doorLeafFacing .'-'.$doorLeafFacingCost.'|' .$door_cost;
 
-        if($request->doorsetType == 'leaf_and_a_half'){
+        if($request->doorsetType == 'leaf_and_a_half' || $request->doorsetType == 'DD'){
 
             $description .= '|'.$door_core2.'|'.$lm.'|'.$thickness_cost .'|'. $request->doorLeafFacing .'-'.$doorLeafFacingCost.'|'.$door_cost;
 
@@ -4620,7 +4620,7 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
             ],
         ];
 
-        if($request->doorsetType == 'leaf_and_a_half'){
+        if($request->doorsetType == 'leaf_and_a_half' || $request->doorsetType == 'DD'){
             $breakdown['leaves'][] = buildLeafSetBreakdownEntry($request->leafWidth2, $request->leafHeightNoOP, $door_core2, $minCoreCode2, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps, $laminateSheetOptionsList,$request->overpanel);
         }
 
