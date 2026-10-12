@@ -4056,7 +4056,11 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
         $frame_unit_cost = GlassType::join('selected_glass_type','glass_type.id','selected_glass_type.glass_id')->wherein('selected_glass_type.editBy', $userIds)->where('glass_type.'.$configurationDoor,$request->issingleconfiguration)->where('glass_type.Key',$request->glassType)->first();
         $category = 'Glass';
         $frame_unit = 'Area M2';
-        $unit_cost = (empty($frame_unit_cost))?0:$frame_unit_cost->selectedPrice;
+
+        $unit_cost = $frame_unit_cost->selectedPrice ?? 0;
+        if ($request->doorsetType == 'DD' || $request->doorsetType == 'leaf_and_a_half') {
+            $unit_cost += $frame_unit_cost->selectedPrice ?? 0;
+        }
         SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
 
     }else if($request->leaf2VisionPanel == 'Yes' && !empty($request->visionPanelQuantityforLeaf2) && !empty($request->issingleconfiguration) && !empty($request->glassType)){
@@ -4080,7 +4084,10 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
         $frame_unit_cost = GlassType::join('selected_glass_type','glass_type.id','selected_glass_type.glass_id')->wherein('selected_glass_type.editBy', $userIds)->where('glass_type.'.$configurationDoor,$request->issingleconfiguration)->where('glass_type.Key',$request->glassType)->first();
         $category = 'Glass';
         $frame_unit = 'Area M2';
-        $unit_cost = (!empty($frame_unit_cost))?$frame_unit_cost->selectedPrice:0;
+        $unit_cost = $frame_unit_cost->selectedPrice ?? 0;
+        if ($request->doorsetType == 'DD' || $request->doorsetType == 'leaf_and_a_half') {
+            $unit_cost += $frame_unit_cost->selectedPrice ?? 0;
+        }
         SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
     }
 
