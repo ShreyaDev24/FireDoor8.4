@@ -793,11 +793,16 @@ class DoorScheduleController extends Controller
             if ($doorMode === 'multiple') {
                 $multipledoornumber = trim($request->multipledoornumber);
 
-                // Split by spaces and remove any empty values
-                $array = array_filter(explode(' ', $multipledoornumber));
+                // Split by one or more whitespace characters
+                $array = preg_split('/\s+/', $multipledoornumber, -1, PREG_SPLIT_NO_EMPTY);
 
                 $start = 0;
                 $end = count($array) - 1;
+                if (empty($array)) {
+                    return back()
+                        ->withInput()
+                        ->with('error', 'Please enter at least one door number.');
+                }
             } else {
                 $prefix = $request->prefix;
                 $start = (int) $request->range_start;
