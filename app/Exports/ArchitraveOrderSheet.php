@@ -136,8 +136,8 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:N1';
-                $cellRange = 'A2:N2';
+                $cellRange1 = 'A1:M1';
+                $cellRange = 'A2:M2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -171,7 +171,6 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
                 $event->sheet->getColumnDimension('K')->setAutoSize(true);
                 $event->sheet->getColumnDimension('L')->setAutoSize(true);
                 $event->sheet->getColumnDimension('M')->setAutoSize(true);
-                $event->sheet->getColumnDimension('N')->setAutoSize(true);
 
                 $event->sheet->getStyle($cellRange)->getAlignment()->setWrapText(true);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
