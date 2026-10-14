@@ -5019,13 +5019,13 @@ function buildLeafSetBreakdownOnly($request, $userIds): ?array{
 }
 
 function IntumescentExport($request,$userIds,$userLoginId): void{
-    if(!empty($request->intumescentSealArrangement) && !empty($request->intumescentSealType) && !empty($request->intumescentSealLocation) && !empty($request->intumescentSealColor)){
+    if(!empty($request->intumescentSealArrangement)){
         $IntumescentSealsDetails = SettingIntumescentSeals2::select('id', 'intumescentSeals','brand')
         ->where("id", $request->intumescentSealArrangement)->first();
 
         if(isset($IntumescentSealsDetails->id)){
             $intumescentSealArrangement = $IntumescentSealsDetails->brand."-".$IntumescentSealsDetails->intumescentSeals;
-            $description = str_replace("_", ' ', $request->intumescentSealType)."| ".$request->intumescentSealLocation."| ".$request->intumescentSealColor."| ".$IntumescentSealsDetails->brand."|".$IntumescentSealsDetails->intumescentSeals;
+            $description = str_replace("_", ' ', $request->intumescentSealType) ?? '-'."| ".$request->intumescentSealLocation ?? '-'."| ".$request->intumescentSealColor ?? '-'."| ".$IntumescentSealsDetails->brand."|".$IntumescentSealsDetails->intumescentSeals;
 
             $intumescentSealTypeDetails = GetOptions(["setting_intumescentseals2.id" => $request->intumescentSealArrangement],"join" ,"intumescentSealArrangement", "first", ["selected_intumescentseals2.selected_cost", "selected_intumescentseals2.id"],[],$userLoginId);
 
