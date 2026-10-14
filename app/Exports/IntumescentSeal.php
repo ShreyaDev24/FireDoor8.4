@@ -102,6 +102,8 @@ class IntumescentSeal implements FromCollection, WithHeadings, WithEvents, WithT
                 $event->sheet->getDelegate()->getStyle($cellRange1)->applyFromArray($styleArray);
                 $event->sheet->getDelegate()->getStyle($cellRange2)->applyFromArray($styleArray);
                 $event->sheet->getStyle($cellRange2)->getAlignment()->setWrapText(true);
+
+                CutListProjectHeader::apply($event->sheet, $this->id, $this->vid);
             },
         ];
     }

@@ -529,6 +529,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                         ],
                     ]);
                 }
+
+                CutListProjectHeader::apply($event->sheet, $this->id, $this->vid);
             },
         ];
     }

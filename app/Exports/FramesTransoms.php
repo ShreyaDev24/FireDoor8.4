@@ -824,6 +824,8 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                         $sheet->getStyle("A{$i}:I{$i}")->applyFromArray($mainTitleStyle);
                     }
                 }
+
+                CutListProjectHeader::apply($sheet, $this->id, $this->vid);
             },
         ];
     }

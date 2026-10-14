@@ -514,6 +514,8 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     ],
                 ]);
             }
+
+            CutListProjectHeader::apply($event->sheet, $this->id, $this->vid);
         },
     ];
 }
