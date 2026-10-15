@@ -3872,6 +3872,9 @@ function frameExport($request,$userIds,$userLoginId): void{
             $SL2Width = $request->SL2Width ?? 0;
 
             $LM = ((($request->frameHeight + $OPHeight) * 2) + $request->frameWidth  +  $SL1Width + $SL2Width)/1000;
+            if($request->doorsetType == 'leaf_and_a_half' || $request->doorsetType == 'DD'){
+                $LM = $LM * 2;
+            }
 
             $Architrave_Finish =  Option::join('selected_option','options.id','=', 'selected_option.optionId')->where(['selected_option.SelectedUserId'=>auth()->user()->id, 'options.OptionSlug' => 'Architrave_Finish','options.is_deleted' => 0, 'OptionKey'=>$request->architraveFinish])->where("options.configurableitems",$request->issingleconfiguration)->wherein('options.editBy', $u_id)->select('selected_option.SelectedOptionCost')->first();
 
@@ -5092,13 +5095,13 @@ function buildLeafSetBreakdownOnly($request, $userIds): ?array{
 }
 
 function IntumescentExport($request,$userIds,$userLoginId): void{
-    if(!empty($request->intumescentSealArrangement) && !empty($request->intumescentSealType) && !empty($request->intumescentSealLocation) && !empty($request->intumescentSealColor)){
+    if(!empty($request->intumescentSealArrangement)){
         $IntumescentSealsDetails = SettingIntumescentSeals2::select('id', 'intumescentSeals','brand')
         ->where("id", $request->intumescentSealArrangement)->first();
 
         if(isset($IntumescentSealsDetails->id)){
             $intumescentSealArrangement = $IntumescentSealsDetails->brand."-".$IntumescentSealsDetails->intumescentSeals;
-            $description = str_replace("_", ' ', $request->intumescentSealType)."| ".$request->intumescentSealLocation."| ".$request->intumescentSealColor."| ".$IntumescentSealsDetails->brand."|".$IntumescentSealsDetails->intumescentSeals;
+            $description = str_replace("_", ' ', $request->intumescentSealType) ?? '-'."| ".$request->intumescentSealLocation ?? '-'."| ".$request->intumescentSealColor ?? '-'."| ".$IntumescentSealsDetails->brand."|".$IntumescentSealsDetails->intumescentSeals;
 
             $intumescentSealTypeDetails = GetOptions(["setting_intumescentseals2.id" => $request->intumescentSealArrangement],"join" ,"intumescentSealArrangement", "first", ["selected_intumescentseals2.selected_cost", "selected_intumescentseals2.id"],[],$userLoginId);
 
