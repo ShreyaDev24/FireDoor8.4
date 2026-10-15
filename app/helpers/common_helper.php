@@ -3799,6 +3799,9 @@ function frameExport($request,$userIds,$userLoginId): void{
             $SL2Width = $request->SL2Width ?? 0;
 
             $LM = ((($request->frameHeight + $OPHeight) * 2) + $request->frameWidth  +  $SL1Width + $SL2Width)/1000;
+            if($request->doorsetType == 'leaf_and_a_half' || $request->doorsetType == 'DD'){
+                $LM = $LM * 2;
+            }
 
             $Architrave_Finish =  Option::join('selected_option','options.id','=', 'selected_option.optionId')->where(['selected_option.SelectedUserId'=>auth()->user()->id, 'options.OptionSlug' => 'Architrave_Finish','options.is_deleted' => 0, 'OptionKey'=>$request->architraveFinish])->where("options.configurableitems",$request->issingleconfiguration)->wherein('options.editBy', $u_id)->select('selected_option.SelectedOptionCost')->first();
 
