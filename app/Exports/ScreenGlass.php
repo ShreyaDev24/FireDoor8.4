@@ -325,6 +325,8 @@ public function registerEvents(): array
                     break;
                 }
             }
+
+            CutListProjectHeader::apply($sheet, $this->id, $this->vid);
         },
     ];
 }

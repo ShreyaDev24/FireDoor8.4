@@ -534,6 +534,8 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                         break;
                     }
                 }
+
+                CutListProjectHeader::apply($sheet, $this->id, $this->vid);
             },
         ];
     }

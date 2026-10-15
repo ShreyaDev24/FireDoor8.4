@@ -175,6 +175,8 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
                 $event->sheet->getStyle($cellRange)->getAlignment()->setWrapText(true);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
                 $event->sheet->getDelegate()->getStyle($cellRange1)->applyFromArray($styleArray);
+
+                CutListProjectHeader::apply($event->sheet, $this->id, $this->vid);
             },
         ];
     }
