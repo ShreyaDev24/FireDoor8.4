@@ -4104,7 +4104,9 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
             $unit_cost = (empty($frame_unit_cost))?0:$frame_unit_cost->glassSelectedPrice;
         }
 
-        $QtyPerDoorType = (($request->oPWidth - (2 * $request->frameThickness))/1000) * (($request->oPHeigth - (2 * $request->frameThickness))/1000);
+        // $QtyPerDoorType = (($request->oPWidth - (2 * $request->frameThickness))/1000) * (($request->oPHeigth - (2 * $request->frameThickness))/1000);
+        $QtyPerDoorType = ($request->oPWidth/1000) * ($request->oPHeigth /1000);
+
         SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
     }
 
