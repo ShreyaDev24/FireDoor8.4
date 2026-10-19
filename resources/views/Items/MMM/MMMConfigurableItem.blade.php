@@ -130,6 +130,10 @@
                                         <a class="btn btn-primary" data-toggle="tab" href="#frame-section">Frame</a>
                                         <input type="hidden" value="2039px">
                                     </li>
+                                    <li class="optionItem">
+                                        <a class="btn btn-primary" data-toggle="tab" href="#ironmongery-section">Ironmongery</a>
+                                        <input type="hidden" value="2348px">
+                                    </li>
                                     <li class="optionItem framehideshow">
                                         <a class="btn btn-primary" data-toggle="tab" href="#over-panel-section">Overpanel/Fanlight</a>
                                         <input type="hidden" value="2656px">
@@ -182,6 +186,10 @@
 
                         <div id="frame-section" class="tab-pane fade framehideshow">
                             @include("Items.MMM.MMMDoorModules.Frame")
+                        </div>
+
+                        <div id="ironmongery-section" class="tab-pane fade">
+                            @include("Items.MMM.MMMDoorModules.Ironmongery")
                         </div>
 
                         <div id="over-panel-section" class="tab-pane fade framehideshow">

@@ -125,6 +125,10 @@
                                         <a class="btn btn-primary" data-toggle="tab" href="#frame-section">Frame</a>
                                         <input type="hidden" value="2039px">
                                     </li>
+                                    <li class="optionItem">
+                                        <a class="btn btn-primary" data-toggle="tab" href="#ironmongery-section">Ironmongery</a>
+                                        <input type="hidden" value="2348px">
+                                    </li>
                                     <li class="optionItem framehideshow seadechide">
                                         <a class="btn btn-primary" data-toggle="tab" href="#over-panel-section">Overpanel/Fanlight Section</a>
                                         <input type="hidden" value="2656px">
@@ -161,7 +165,7 @@
                     <input type="hidden" name="pageIdentity" id="pageIdentity" value="5">
                     <input type="hidden" name="version_id" value="<?= (!is_null($versionId))?$versionId:0; ?>">
                     <input type="hidden" name="SvgImage" value=""/>
-                    
+
                     <div class="tab-content">
                         <div id="main-options-section" class="tab-pane active">
                             @include("Items.Seadec.SeadecDoorModules.MainOptions")
@@ -177,6 +181,10 @@
 
                         <div id="frame-section" class="tab-pane fade framehideshow">
                             @include("Items.Seadec.SeadecDoorModules.Frame")
+                        </div>
+
+                        <div id="frame-section" class="tab-pane fade framehideshow">
+                            @include("Items.Seadec.SeadecDoorModules.Ironmongery")
                         </div>
 
                         <div id="over-panel-section" class="tab-pane fade framehideshow seadechide">
