@@ -1916,7 +1916,7 @@ function copyOfSideLite1Change(isstatus = false){
             floor_finish_change();
             frameThicknessChange();
             MeetingStyle();
-            // doorThicknessFilter($("#fireRating").val());
+            doorThicknessFilter($("#fireRating").val());
             glazingSystemFIlter($("#fireRating").val());
             onlyLipingSpecies($("#fireRating").val());
             glass_glazing_system();
@@ -2044,6 +2044,12 @@ function copyOfSideLite1Change(isstatus = false){
                         // }
 
                         if(data[index].OptionSlug=="Glass_Integrity" &&  data[index].UnderAttribute == fireRating){
+                            if (
+                                data[index].OptionKey == "Non_Fire_Rated_Glass" &&
+                                String(fireRating).toUpperCase() != "NFR"
+                            ) {
+                                continue;
+                            }
                             if (GlassIntegrityValue != null) {
                                 GlassIntegrityValue = $("#GlassIntegrity-value").data("value");
                                 var GlassIntegritySelected = "";

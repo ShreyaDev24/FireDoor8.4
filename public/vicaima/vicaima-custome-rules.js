@@ -2035,6 +2035,12 @@ function doorThicknessFilter(fireRating, opGlassIntegrityVal = "") {
                     // }
 
                     if (data[index].OptionSlug == "Glass_Integrity" && data[index].UnderAttribute == fireRating) {
+                        if (
+                            data[index].OptionKey == "Non_Fire_Rated_Glass" &&
+                            String(fireRating).toUpperCase() != "NFR"
+                        ) {
+                            continue;
+                        }
                         if (GlassIntegrityValue != null) {
                             GlassIntegrityValue = $("#GlassIntegrity-value").data("value");
                             var GlassIntegritySelected = "";
