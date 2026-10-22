@@ -444,7 +444,7 @@ function HalspanBomCalculation($request,$userLoginId=null): void{
 }
 
 function glazingBeadExport($request,$userIds,$userLoginId): void{
-    if(!empty($request->glazingBeadSpecies) && !empty($request->glazingBeads) && !empty($request->glazingBeadsThickness) &&  !empty($request->glazingBeadsHeight) &&  !empty($request->vP1Width) && !empty($request->vP1Height1) && !empty($request->visionPanelQuantity)){
+    if(!empty($request->glazingBeadSpecies) && !empty($request->glazingBeads) && !empty($request->glazingBeadsThickness) &&  !empty($request->glazingBeadsHeight) &&  (!empty($request->vP1Width) && !empty($request->vP1Height1) && !empty($request->visionPanelQuantity)) ||  (!empty($request->vP2Width) && !empty($request->vP2Height1) && !empty($request->visionPanelQuantityforLeaf2))){
         $selected_lipping_species = LippingSpecies::where('id', $request->glazingBeadSpecies)->get();
 
         // CHANGED BY @UT 22-02-2024
@@ -468,6 +468,20 @@ function glazingBeadExport($request,$userIds,$userLoginId): void{
                     $LMOfGlazing = ($request->vP1Width*2)+($request->vP1Height1*2)+($request->vP1Width*2)+($request->vP1Height2*2)+($request->vP1Width*2)+($request->vP1Height3*2)+($request->vP1Width*2)+($request->vP1Height4*2);
                 }elseif($request->visionPanelQuantity == '5'){
                     $LMOfGlazing = ($request->vP1Width*2)+($request->vP1Height1*2)+($request->vP1Width*2)+($request->vP1Height2*2)+($request->vP1Width*2)+($request->vP1Height3*2)+($request->vP1Width*2)+($request->vP1Height4*2)+($request->vP1Width*2)+($request->vP1Height5*2);
+                }
+
+                if($request->doorsetType == 'DD' || $request->doorsetType == 'leaf_and_a_half'){
+                    if($request->visionPanelQuantityforLeaf2 == '1'){
+                        $LMOfGlazing += ($request->vP2Width*2)+($request->vP2Height1*2);
+                    }elseif($request->visionPanelQuantityforLeaf2 == '2'){
+                        $LMOfGlazing += ($request->vP2Width*2)+($request->vP2Height1*2)+($request->vP2Width*2)+($request->vP2Height2*2);
+                    }elseif($request->visionPanelQuantityforLeaf2 == '3'){
+                        $LMOfGlazing += ($request->vP2Width*2)+($request->vP2Height1*2)+($request->vP2Width*2)+($request->vP2Height2*2)+($request->vP2Width*2)+($request->vP2Height3*2);
+                    }elseif($request->visionPanelQuantityforLeaf2 == '4'){
+                        $LMOfGlazing += ($request->vP2Width*2)+($request->vP2Height1*2)+($request->vP2Width*2)+($request->vP2Height2*2)+($request->vP2Width*2)+($request->vP2Height3*2)+($request->vP2Width*2)+($request->vP2Height4*2);
+                    }elseif($request->visionPanelQuantityforLeaf2 == '5'){
+                        $LMOfGlazing += ($request->vP2Width*2)+($request->vP2Height1*2)+($request->vP2Width*2)+($request->vP2Height2*2)+($request->vP2Width*2)+($request->vP2Height3*2)+($request->vP2Width*2)+($request->vP2Height4*2)+($request->vP2Width*2)+($request->vP2Height5*2);
+                    }
                 }
 
                 $LMOfGlazingSystem = $LMOfGlazing/1000;
@@ -501,9 +515,27 @@ function glazingBeadExport($request,$userIds,$userLoginId): void{
             $description = $word.'|'.$selected_lipping_species[0]['SpeciesName'].'|Lacquer|'.$acronym.'_'.$request->glazingBeadsThickness.'mm x '.$request->glazingBeadsHeight.'mm|'.$request->vP1Width.'mm x '.$request->vP1Height1.'mm, & '.$request->vP1Width.'mm x '.$request->vP1Height2.'mm, & '.$request->vP1Width.'mm x '.$request->vP1Height3.'mm, & '.$request->vP1Width.'mm x '.$request->vP1Height4.'mm, & '.$request->vP1Width.'mm x '.$request->vP1Height5.'mm';
         }
 
+        if($request->doorsetType == 'DD' || $request->doorsetType == 'leaf_and_a_half'){
+            if($request->visionPanelQuantityforLeaf2 == '1'){
+                $description .= 'and '.$request->vP2Width.'mm x '.$request->vP2Height1.'mm';
+            }elseif($request->visionPanelQuantityforLeaf2 == '2'){
+                $description .= 'and '.$request->vP2Width.'mm x '.$request->vP2Height1.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height2.'mm';
+            }elseif($request->visionPanelQuantityforLeaf2 == '3'){
+                $description .= 'and '.$request->vP2Width.'mm x '.$request->vP2Height1.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height2.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height3.'mm';
+            // dd($description);
+            }elseif($request->visionPanelQuantityforLeaf2 == '4'){
+                $description .= 'and '.$request->vP2Width.'mm x '.$request->vP2Height1.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height2.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height3.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height4.'mm';
+            }elseif($request->visionPanelQuantityforLeaf2 == '5'){
+                $description .= 'and '.$request->vP2Width.'mm x '.$request->vP2Height1.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height2.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height3.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height4.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height5.'mm';
+            }
+        }
+
         $category = 'GlazingBeads';
         $frame_unit = 'Each';
         $QtyPerDoorType = $request->visionPanelQuantity * 2;
+        if($request->doorsetType == 'DD' || $request->doorsetType == 'leaf_and_a_half'){
+            $QtyPerDoorType += $request->visionPanelQuantityforLeaf2 * 2;
+        }
         $total_cost = $unit_cost*$QtyPerDoorType;
         SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType,$total_cost);
 
