@@ -85,6 +85,19 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     }
                 }
 
+                // For AP1, combine the quantity only when Leaf 1 and Leaf 2
+                // have exactly the same width and height. Otherwise each leaf
+                // is reported separately in the VP2 section.
+                $leaf1H1 = (int) ($value->Leaf1VPHeight1 ?? 0);
+                $leaf2H1 = (int) ($value->Leaf2VPHeight1 ?? 0);
+                $leaf1W = (int) ($value->Leaf1VPWidth ?? 0);
+                $leaf2W = (int) ($value->Leaf2VPWidth ?? 0);
+                if ($leaf1H1 > 0 || $leaf2H1 > 0) {
+                    $qty = ($leaf1H1 > 0 && $leaf2H1 > 0 && $leaf1W === $leaf2W && $leaf1H1 === $leaf2H1)
+                        ? 2
+                        : 1;
+                }
+
                 $data[] = array(
                     doorcorename($value->configurableitems),
                     $value->DoorType,
@@ -101,21 +114,52 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
                     ($value->Leaf1VPHeight2 || $value->Leaf2VPHeight2) ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? (($value->Leaf1VPHeight2)?$value->Leaf1VPHeight2:$value->Leaf2VPHeight2) + $VisionPanelHeightFD60 : (($value->Leaf1VPHeight2)?$value->Leaf1VPHeight2:$value->Leaf2VPHeight2) + $VisionPanelHeightNFR):'',
 
-                    ($value->Leaf1VPHeight2 || $value->Leaf2VPHeight2) ? (($value->Leaf1VPHeight2)?1:0) + (($value->Leaf2VPHeight2)?1:0) : '',
+                    ($value->Leaf1VPHeight2 || $value->Leaf2VPHeight2) ? (((int)($value->Leaf1VPHeight2 ?? 0) > 0 && (int)($value->Leaf2VPHeight2 ?? 0) > 0 && (int)($value->Leaf1VPWidth ?? 0) === (int)($value->Leaf2VPWidth ?? 0) && (int)$value->Leaf1VPHeight2 === (int)$value->Leaf2VPHeight2) ? 2 : 1) : '',
 
                     ($value->Leaf1VPHeight3 || $value->Leaf2VPHeight3) ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? (($value->Leaf1VPHeight3)?$value->Leaf1VPHeight3:$value->Leaf2VPHeight3) + $VisionPanelHeightFD60 : (($value->Leaf1VPHeight3)?$value->Leaf1VPHeight3:$value->Leaf2VPHeight3) + $VisionPanelHeightNFR):'',
 
-                    ($value->Leaf1VPHeight3 || $value->Leaf2VPHeight3) ? (($value->Leaf1VPHeight3)?1:0) + (($value->Leaf2VPHeight3)?1:0) : '',
+                    ($value->Leaf1VPHeight3 || $value->Leaf2VPHeight3) ? (((int)($value->Leaf1VPHeight3 ?? 0) > 0 && (int)($value->Leaf2VPHeight3 ?? 0) > 0 && (int)($value->Leaf1VPWidth ?? 0) === (int)($value->Leaf2VPWidth ?? 0) && (int)$value->Leaf1VPHeight3 === (int)$value->Leaf2VPHeight3) ? 2 : 1) : '',
 
                     ($value->Leaf1VPHeight4 || $value->Leaf2VPHeight4) ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? (($value->Leaf1VPHeight4)?$value->Leaf1VPHeight4:$value->Leaf2VPHeight4) + $VisionPanelHeightFD60 : (($value->Leaf1VPHeight4)?$value->Leaf1VPHeight4:$value->Leaf2VPHeight4) + $VisionPanelHeightNFR):'',
 
-                    ($value->Leaf1VPHeight4 || $value->Leaf2VPHeight4) ? (($value->Leaf1VPHeight4)?1:0) + (($value->Leaf2VPHeight4)?1:0) : '',
+                    ($value->Leaf1VPHeight4 || $value->Leaf2VPHeight4) ? (((int)($value->Leaf1VPHeight4 ?? 0) > 0 && (int)($value->Leaf2VPHeight4 ?? 0) > 0 && (int)($value->Leaf1VPWidth ?? 0) === (int)($value->Leaf2VPWidth ?? 0) && (int)$value->Leaf1VPHeight4 === (int)$value->Leaf2VPHeight4) ? 2 : 1) : '',
 
                     ($value->Leaf1VPHeight5 || $value->Leaf2VPHeight5) ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? (($value->Leaf1VPHeight5)?$value->Leaf1VPHeight5:$value->Leaf2VPHeight5) + $VisionPanelHeightFD60 : (($value->Leaf1VPHeight5)?$value->Leaf1VPHeight5:$value->Leaf2VPHeight5) + $VisionPanelHeightNFR):'',
 
-                    ($value->Leaf1VPHeight5 || $value->Leaf2VPHeight5) ? (($value->Leaf1VPHeight5)?1:0) + (($value->Leaf2VPHeight5)?1:0) : '',
+                    ($value->Leaf1VPHeight5 || $value->Leaf2VPHeight5) ? (((int)($value->Leaf1VPHeight5 ?? 0) > 0 && (int)($value->Leaf2VPHeight5 ?? 0) > 0 && (int)($value->Leaf1VPWidth ?? 0) === (int)($value->Leaf2VPWidth ?? 0) && (int)$value->Leaf1VPHeight5 === (int)$value->Leaf2VPHeight5) ? 2 : 1) : '',
                     $value->rWdBRating ? $value->rWdBRating : '',
                     $value->FireRating,
+
+                    // VP2 section: Leaf 2 vision panels, heights 1-5.
+                    // If a Leaf 2 VP matches the corresponding Leaf 1 VP size,
+                    // it is counted in the existing AP quantity instead of being repeated here.
+                    (($value->Leaf2VPHeight1 ?? 0) > 0 && !(($value->Leaf1VPHeight1 ?? 0) > 0 && (int)$value->Leaf1VPWidth === (int)$value->Leaf2VPWidth && (int)$value->Leaf1VPHeight1 === (int)$value->Leaf2VPHeight1))
+                        ? (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf2VPHeight1 + $VisionPanelHeightFD60 : $value->Leaf2VPHeight1 + $VisionPanelHeightNFR) : '',
+
+                    (($value->Leaf2VPHeight1 ?? 0) > 0 && !(($value->Leaf1VPHeight1 ?? 0) > 0 && (int)$value->Leaf1VPWidth === (int)$value->Leaf2VPWidth && (int)$value->Leaf1VPHeight1 === (int)$value->Leaf2VPHeight1)) ? (($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? $value->Leaf2VPWidth + $VisionPanelWidthNFR : $value->Leaf2VPWidth + $VisionPanelWidthFD60) : '',
+
+                    (($value->Leaf2VPHeight1 ?? 0) > 0 && !(($value->Leaf1VPHeight1 ?? 0) > 0 && (int)$value->Leaf1VPWidth === (int)$value->Leaf2VPWidth && (int)$value->Leaf1VPHeight1 === (int)$value->Leaf2VPHeight1)) ? 1 : '',
+
+                    (($value->Leaf2VPHeight2 ?? 0) > 0 && !(($value->Leaf1VPHeight2 ?? 0) > 0 && (int)$value->Leaf1VPWidth === (int)$value->Leaf2VPWidth && (int)$value->Leaf1VPHeight2 === (int)$value->Leaf2VPHeight2))
+                        ? (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf2VPHeight2 + $VisionPanelHeightFD60 : $value->Leaf2VPHeight2 + $VisionPanelHeightNFR) : '',
+
+                    (($value->Leaf2VPHeight2 ?? 0) > 0 && !(($value->Leaf1VPHeight2 ?? 0) > 0 && (int)$value->Leaf1VPWidth === (int)$value->Leaf2VPWidth && (int)$value->Leaf1VPHeight2 === (int)$value->Leaf2VPHeight2)) ? 1 : '',
+
+                    (($value->Leaf2VPHeight3 ?? 0) > 0 && !(($value->Leaf1VPHeight3 ?? 0) > 0 && (int)$value->Leaf1VPWidth === (int)$value->Leaf2VPWidth && (int)$value->Leaf1VPHeight3 === (int)$value->Leaf2VPHeight3))
+                        ? (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf2VPHeight3 + $VisionPanelHeightFD60 : $value->Leaf2VPHeight3 + $VisionPanelHeightNFR) : '',
+
+                    (($value->Leaf2VPHeight3 ?? 0) > 0 && !(($value->Leaf1VPHeight3 ?? 0) > 0 && (int)$value->Leaf1VPWidth === (int)$value->Leaf2VPWidth && (int)$value->Leaf1VPHeight3 === (int)$value->Leaf2VPHeight3)) ? 1 : '',
+
+                    (($value->Leaf2VPHeight4 ?? 0) > 0 && !(($value->Leaf1VPHeight4 ?? 0) > 0 && (int)$value->Leaf1VPWidth === (int)$value->Leaf2VPWidth && (int)$value->Leaf1VPHeight4 === (int)$value->Leaf2VPHeight4))
+                        ? (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf2VPHeight4 + $VisionPanelHeightFD60 : $value->Leaf2VPHeight4 + $VisionPanelHeightNFR) : '',
+
+
+                    (($value->Leaf2VPHeight4 ?? 0) > 0 && !(($value->Leaf1VPHeight4 ?? 0) > 0 && (int)$value->Leaf1VPWidth === (int)$value->Leaf2VPWidth && (int)$value->Leaf1VPHeight4 === (int)$value->Leaf2VPHeight4)) ? 1 : '',
+
+                    (($value->Leaf2VPHeight5 ?? 0) > 0 && !(($value->Leaf1VPHeight5 ?? 0) > 0 && (int)$value->Leaf1VPWidth === (int)$value->Leaf2VPWidth && (int)$value->Leaf1VPHeight5 === (int)$value->Leaf2VPHeight5))
+                        ? (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf2VPHeight5 + $VisionPanelHeightFD60 : $value->Leaf2VPHeight5 + $VisionPanelHeightNFR) : '',
+
+                    (($value->Leaf2VPHeight5 ?? 0) > 0 && !(($value->Leaf1VPHeight5 ?? 0) > 0 && (int)$value->Leaf1VPWidth === (int)$value->Leaf2VPWidth && (int)$value->Leaf1VPHeight5 === (int)$value->Leaf2VPHeight5)) ? 1 : '',
                 );
 
 
@@ -163,6 +207,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     '',
                     $value->rWdBRating ? $value->rWdBRating : '',
                     $value->FireRating,
+                    ...array_fill(0, 15, ''), // Empty VP2 section for fanlight row
                 );
             }
 
@@ -209,6 +254,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     '',
                     $value->rWdBRating ? $value->rWdBRating : '',
                     $value->FireRating,
+                    ...array_fill(0, 15, ''), // Empty VP2 section for side light 1 row
                 );
             }
 
@@ -256,6 +302,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     '',
                     $value->rWdBRating ? $value->rWdBRating : '',
                     $value->FireRating,
+                    ...array_fill(0, 15, ''), // Empty VP2 section for side light 2 row
                 );
             }
         }
@@ -393,7 +440,12 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                 'AP5 H',
                 'QTY',
                 'DB Rating',
-                'Fire Rating'
+                'Fire Rating',
+                'VP2 AP1 H', 'VP2 AP1 W', 'VP2 AP1 QTY',
+                'VP2 AP2 H', 'VP2 AP2 QTY',
+                'VP2 AP3 H', 'VP2 AP3 QTY',
+                'VP2 AP4 H', 'VP2 AP4 QTY',
+                'VP2 AP5 H', 'VP2 AP5 QTY'
             ];
         }
 
@@ -410,8 +462,8 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             // --------------------------------------------
             // 🔹 1. GLASS ORDER SHEET HEADER STYLING
             // --------------------------------------------
-            $titleRange = 'A1:T1';
-            $headerRange = 'A2:T2';
+            $titleRange = 'A1:AD1';
+            $headerRange = 'A2:AD2';
 
             // Merge "Glass Order Sheet" title
             $event->sheet->mergeCells($titleRange);
@@ -457,9 +509,18 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             ]);
 
             // Auto-size all columns A–R
-            foreach (range('A', 'T') as $col) {
+            // Auto-size all columns A–AD
+            foreach (range('A', 'Z') as $col) {
                 $event->sheet->getColumnDimension($col)->setAutoSize(true);
             }
+
+            $event->sheet->getColumnDimension('AA')->setAutoSize(true);
+            $event->sheet->getColumnDimension('AB')->setAutoSize(true);
+            $event->sheet->getColumnDimension('AC')->setAutoSize(true);
+            $event->sheet->getColumnDimension('AD')->setAutoSize(true);
+            // foreach (range('AA', 'AD') as $col) {
+            //     $event->sheet->getColumnDimension($col)->setAutoSize(true);
+            // }
 
             // --------------------------------------------
             // 🔹 2. SUMMARY SECTION STYLING
@@ -476,7 +537,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
             if ($summaryRow) {
                 // Summary title row styling (yellow bar)
-                $summaryTitle = "A{$summaryRow}:T{$summaryRow}";
+                $summaryTitle = "A{$summaryRow}:AD{$summaryRow}";
                 $event->sheet->mergeCells($summaryTitle);
                 $event->sheet->getDelegate()->getStyle($summaryTitle)->applyFromArray([
                     'font' => [
@@ -501,7 +562,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
                 // Summary header row ("Glass Type", etc.)
                 $summaryHeader = $summaryRow + 1;
-                $summaryHeaderRange = "A{$summaryHeader}:T{$summaryHeader}";
+                $summaryHeaderRange = "A{$summaryHeader}:AD{$summaryHeader}";
                 $event->sheet->getDelegate()->getStyle($summaryHeaderRange)->applyFromArray([
                     'font' => [
                         'bold' => true,
