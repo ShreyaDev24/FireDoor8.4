@@ -11,8 +11,12 @@ use App\Models\Quotation;
 use App\Models\DoorFrameConstruction;
 use Auth;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
 
-class ExportFrameExcel implements FromCollection, WithHeadings, WithEvents, WithTitle
+class ExportFrameExcel extends DefaultValueBinder implements FromCollection, WithHeadings, WithEvents, WithTitle, WithCustomValueBinder
 {
     protected $id, $vid;
 
@@ -43,7 +47,7 @@ class ExportFrameExcel implements FromCollection, WithHeadings, WithEvents, With
 
         foreach ($item as $value) {
             $data[] = [
-                $value->doorNumber,
+                (string) $value->doorNumber,
                 $value->plot_ref_no,
                 $value->certification_no,
                 $value->FrameDepth,
@@ -138,6 +142,27 @@ class ExportFrameExcel implements FromCollection, WithHeadings, WithEvents, With
     public function title(): string
     {
         return 'Frames Excel';
+    }
+
+    public function bindValue(Cell $cell, $value): bool
+    {
+        // Column A contains Door Number in the main door section.
+        // Preserve numeric-looking door numbers as text.
+        if (
+            $cell->getColumn() === 'A' &&
+            $cell->getRow() >= 3 &&
+            is_string($value)
+        ) {
+            $cell->setValueExplicit(
+                $value,
+                DataType::TYPE_STRING
+            );
+
+            return true;
+        }
+
+        // Allow PhpSpreadsheet to handle all other values normally.
+        return parent::bindValue($cell, $value);
     }
 }
 
