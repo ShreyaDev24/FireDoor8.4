@@ -19,8 +19,17 @@ use Carbon\Carbon;
 use App\Models\Company;
 use App\Models\SideScreenItemMaster;
 use Auth;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
 
-class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
+class GlassOrderSheet extends DefaultValueBinder implements
+    FromCollection,
+    WithHeadings,
+    WithEvents,
+    WithTitle,
+    WithCustomValueBinder
 {
     /**
     * @return \Illuminate\Support\Collection
@@ -87,7 +96,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
                 $data[] = array(
                     $value->DoorType,
-                    $value->doorNumber,
+                    (string) $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->GlassThickness,
@@ -139,7 +148,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
                 $data[] = array(
                     $value->DoorType. ' ' .$value->Overpanel,
-                    $value->doorNumber,
+                    (string) $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->OPGlassThickness,
@@ -185,7 +194,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
                 $data[] = array(
                     $value->DoorType. ' Side Light 1',
-                    $value->doorNumber,
+                    (string) $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->SideLight1GlassThickness,
@@ -229,7 +238,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
                 $data[] = array(
                     $value->DoorType. ' Side Light 2',
-                    $value->doorNumber,
+                    (string) $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->SideLight2GlassThickness,
@@ -523,5 +532,15 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
     public function title(): string
     {
         return 'Glass Aperture Only';
+    }
+
+    public function bindValue(Cell $cell, $value): bool
+    {
+        if (is_numeric($value)) {
+            $cell->setValueExplicit($value, DataType::TYPE_STRING);
+            return true;
+        }
+
+        return parent::bindValue($cell, $value);
     }
 }

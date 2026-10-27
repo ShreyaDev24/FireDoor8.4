@@ -20,9 +20,13 @@ use App\Models\LippingSpecies;
 use App\Models\SideScreenItemMaster;
 use App\Models\DoorFrameConstruction;
 use App\Models\User;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
 use Auth;
 
-class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
+class ArchitraveOrderSheet extends DefaultValueBinder implements FromCollection,WithHeadings,WithEvents,WithTitle
 {
     /**
     * @return \Illuminate\Support\Collection
@@ -85,7 +89,7 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
                 $data[] = [
                     $value->plot_ref_no,
                     $value->certification_no,
-                    $value->doorNumber,
+                    (string) $value->doorNumber,
                     $value->DoorType,
                     $value->rWdBRating ? $value->rWdBRating : '',
                     $value->ArchitraveWidth . 'x' . $value->ArchitraveHeight,
@@ -182,5 +186,15 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
     public function title(): string
     {
         return 'Architrave';
+    }
+
+    public function bindValue(Cell $cell, $value): bool
+    {
+        if (is_numeric($value)) {
+            $cell->setValueExplicit($value, DataType::TYPE_STRING);
+            return true;
+        }
+
+        return parent::bindValue($cell, $value);
     }
 }

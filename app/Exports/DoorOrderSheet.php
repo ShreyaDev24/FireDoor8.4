@@ -18,8 +18,17 @@ use Carbon\Carbon;
 use App\Models\Company;
 use App\Models\SideScreenItemMaster;
 use Auth;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
 
-class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
+class DoorOrderSheet extends DefaultValueBinder implements
+    FromCollection,
+    WithHeadings,
+    WithEvents,
+    WithTitle,
+    WithCustomValueBinder
 {
     /**
     * @return \Illuminate\Support\Collection
@@ -135,7 +144,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 ($value->DoorQuantity) ? $value->DoorQuantity : 1,
                 $value->plot_ref_no,
                 $value->certification_no,
-                $value->doorNumber,
+                (string) $value->doorNumber,
                 $value->DoorType,
                 $value->FireRating,
                 $value->LeafThickness,
@@ -536,5 +545,20 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
     public function title(): string
     {
         return 'Door Order Sheet';
+    }
+
+    public function bindValue(Cell $cell, $value): bool
+    {
+        // Door Number is column D in the main Door Order Sheet.
+        if ($cell->getColumn() === 'D' && $cell->getRow() >= 3) {
+            $cell->setValueExplicit(
+                $value === null ? '' : (string) $value,
+                DataType::TYPE_STRING
+            );
+
+            return true;
+        }
+
+        return parent::bindValue($cell, $value);
     }
 }

@@ -16,9 +16,13 @@ use App\Models\QuotationVersion;
 use App\Models\BOMCalculation;
 use Carbon\Carbon;
 use App\Models\User;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
 use Auth;
 
-class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithTitle
+class ScreenGlazingBeads extends DefaultValueBinder implements FromCollection,WithHeadings,WithEvents,WithTitle
 {
     public function __construct(
         /**
@@ -108,7 +112,7 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
 
                     $screenQty = 1;
                     $Qty = 1;
-                    $screenNumber = $value->screenNumber;
+                    $screenNumber = (string) $value->screenNumber;
 
                     $data[] = [
                         $k,
@@ -229,5 +233,15 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
     public function title(): string
     {
         return 'Side Screen Glazing Beads';
+    }
+
+    public function bindValue(Cell $cell, $value): bool
+    {
+        if (is_numeric($value)) {
+            $cell->setValueExplicit($value, DataType::TYPE_STRING);
+            return true;
+        }
+
+        return parent::bindValue($cell, $value);
     }
 }

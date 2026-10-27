@@ -18,9 +18,13 @@ use Carbon\Carbon;
 use App\Models\Company;
 use App\Models\DoorFrameConstruction;
 use App\Models\User;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
 use Auth;
 
-class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
+class ScreenGlass extends DefaultValueBinder implements FromCollection,WithHeadings,WithEvents,WithTitle
 {
     public function __construct(
         /**
@@ -127,7 +131,7 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
                     }
 
                     $screenQty = 1;
-                    $screenNumber = $value->screenNumber;
+                    $screenNumber = (string) $value->screenNumber;
 
                     $data[] = [
                         $k,
@@ -326,5 +330,15 @@ public function registerEvents(): array
     public function title(): string
     {
         return 'Screen Glass';
+    }
+
+    public function bindValue(Cell $cell, $value): bool
+    {
+        if (is_numeric($value)) {
+            $cell->setValueExplicit($value, DataType::TYPE_STRING);
+            return true;
+        }
+
+        return parent::bindValue($cell, $value);
     }
 }

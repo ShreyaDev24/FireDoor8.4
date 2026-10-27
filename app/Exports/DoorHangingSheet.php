@@ -8,8 +8,17 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 use App\Models\Item;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
 
-class DoorHangingSheet implements FromCollection, WithHeadings, WithEvents, WithTitle
+class DoorHangingSheet extends DefaultValueBinder implements
+    FromCollection,
+    WithHeadings,
+    WithEvents,
+    WithTitle,
+    WithCustomValueBinder
 {
    protected $id,$vid,$result,$section;
     function __construct($id,$vid) {
@@ -27,7 +36,7 @@ class DoorHangingSheet implements FromCollection, WithHeadings, WithEvents, With
 
             $data[] = array(
                 $lineNo++,
-                $value->doorNumber,
+                (string) $value->doorNumber,
                 $value->SOHeight,
                 $value->SOWidth,
                 $value->SOWallThick,
@@ -129,5 +138,15 @@ class DoorHangingSheet implements FromCollection, WithHeadings, WithEvents, With
     public function title(): string
     {
         return 'Door Hanging Sheet';
+    }
+
+    public function bindValue(Cell $cell, $value): bool
+    {
+        if (is_numeric($value)) {
+            $cell->setValueExplicit($value, DataType::TYPE_STRING);
+            return true;
+        }
+
+        return parent::bindValue($cell, $value);
     }
 }
