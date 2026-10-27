@@ -8,8 +8,17 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 use App\Models\Item;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
 
-class FrameHangingSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
+class FrameHangingSheet extends DefaultValueBinder implements
+    FromCollection,
+    WithHeadings,
+    WithEvents,
+    WithTitle,
+    WithCustomValueBinder
 {
     protected $id,$vid,$result,$section;
     function __construct($id,$vid) {
@@ -26,7 +35,7 @@ class FrameHangingSheet implements FromCollection,WithHeadings,WithEvents,WithTi
 
             $data[] = array(
                 $lineNo++,
-                $value->doorNumber,
+                (string) $value->doorNumber,
                 $value->SOHeight,
                 $value->SOWidth,
                 $value->SOWallThick,
@@ -128,5 +137,15 @@ class FrameHangingSheet implements FromCollection,WithHeadings,WithEvents,WithTi
     public function title(): string
     {
         return 'Frame Hanging Sheet';
+    }
+
+    public function bindValue(Cell $cell, $value): bool
+    {
+        if (is_numeric($value)) {
+            $cell->setValueExplicit($value, DataType::TYPE_STRING);
+            return true;
+        }
+
+        return parent::bindValue($cell, $value);
     }
 }

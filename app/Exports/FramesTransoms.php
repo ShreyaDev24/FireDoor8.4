@@ -18,12 +18,20 @@ use Carbon\Carbon;
 use App\Models\Company;
 use App\Models\SideScreenItemMaster;
 use Auth;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
 
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 
-class FramesTransoms implements FromCollection, WithEvents, WithTitle
+class FramesTransoms extends DefaultValueBinder implements
+    FromCollection,
+    WithEvents,
+    WithTitle,
+    WithCustomValueBinder
 {
     /**
      * @return \Illuminate\Support\Collection
@@ -236,7 +244,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             }
 
             $data[] = [
-                $value->doorNumber,
+                (string) $value->doorNumber,
                 $value->plot_ref_no,
                 $value->certification_no,
                 doorcorename($value->configurableitems),
@@ -329,7 +337,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
 
 
                 $data[] = [
-                    $value->doorNumber,
+                    (string) $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
                     doorcorename($value->configurableitems),
@@ -407,7 +415,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 }
 
                 $data[] = [
-                    $value->doorNumber,
+                    (string) $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
                     doorcorename($value->configurableitems),
@@ -485,7 +493,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 }
 
                 $data[] = [
-                    $value->doorNumber,
+                    (string) $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
                     doorcorename($value->configurableitems),
@@ -848,5 +856,25 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
         return 'Frames and Transoms';
     }
 
+    public function bindValue(Cell $cell, $value): bool
+    {
+        // Column A contains Door Number in the main door section.
+        // Preserve numeric-looking door numbers as text.
+        if (
+            $cell->getColumn() === 'A' &&
+            $cell->getRow() >= 3 &&
+            is_string($value)
+        ) {
+            $cell->setValueExplicit(
+                $value,
+                DataType::TYPE_STRING
+            );
+
+            return true;
+        }
+
+        // Allow PhpSpreadsheet to handle all other values normally.
+        return parent::bindValue($cell, $value);
+    }
 }
 

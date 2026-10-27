@@ -9,8 +9,13 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 use App\Models\Item;
 use App\Models\Quotation;
+use Auth;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
 
-class VisionPanelGlazingBeads implements FromCollection,WithEvents,WithTitle
+class VisionPanelGlazingBeads extends DefaultValueBinder implements FromCollection,WithEvents,WithTitle,WithCustomValueBinder
 {
     protected $id,$vid,$result;
 
@@ -260,7 +265,7 @@ public function collection()
 
             $data[] = [
                 doorcorename($value->configurableitems),
-                $value->doorNumber,
+                (string) $value->doorNumber,
                 $value->DoorType,
                 $value->SpeciesName,
                 str_replace('_', ' ', $value->GlazingBeads),
@@ -306,7 +311,7 @@ public function collection()
         if ($value->SideLight1 == 'Yes' || $value->SideLight2 == 'Yes') {
             $data[] = [
                 doorcorename($value->configurableitems),
-                $value->doorNumber,
+                (string) $value->doorNumber,
                 $value->DoorType,
                 $value->SpeciesName,
                 str_replace('_', ' ', $value->GlazingBeads),
@@ -346,7 +351,7 @@ public function collection()
         if ($value->Overpanel == 'Fan_Light') {
             $data[] = [
                 doorcorename($value->configurableitems),
-                $value->doorNumber,
+                (string) $value->doorNumber,
                 $value->DoorType,
                 $value->SpeciesName,
                 str_replace('_', ' ', $value->OPGlazingBeads),
@@ -438,5 +443,26 @@ public function collection()
     public function title(): string
     {
         return 'Glazing Beads';
+    }
+
+    public function bindValue(Cell $cell, $value): bool
+    {
+        // Column A contains Door Number in the main door section.
+        // Preserve numeric-looking door numbers as text.
+        if (
+            $cell->getColumn() === 'A' &&
+            $cell->getRow() >= 3 &&
+            is_string($value)
+        ) {
+            $cell->setValueExplicit(
+                $value,
+                DataType::TYPE_STRING
+            );
+
+            return true;
+        }
+
+        // Allow PhpSpreadsheet to handle all other values normally.
+        return parent::bindValue($cell, $value);
     }
 }

@@ -19,8 +19,12 @@ use Carbon\Carbon;
 use App\Models\Company;
 use App\Models\SideScreenItemMaster;
 use Auth;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
 
-class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTitle
+class GlazingBeadsDoors extends DefaultValueBinder implements FromCollection,WithHeadings,WithEvents,WithTitle
 {
     /**
     * @return \Illuminate\Support\Collection
@@ -113,7 +117,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                 $data[] = array(
                     doorcorename($value->configurableitems),
                     $value->DoorType,
-                    $value->doorNumber,
+                    (string) $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->SpeciesName,
@@ -158,7 +162,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                 $data[] = array(
                     doorcorename($value->configurableitems),
                     $value->DoorType. ' ' .$value->Overpanel,
-                    $value->doorNumber,
+                    (string) $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->OPGlazingBeadSpeciesName,
@@ -201,7 +205,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                 $data[] = array(
                     doorcorename($value->configurableitems),
                     $value->DoorType. ' Side Light 1',
-                    $value->doorNumber,
+                    (string) $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->SL1GlazingBeadSpeciesName,
@@ -250,7 +254,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                 $data[] = array(
                     doorcorename($value->configurableitems),
                     $value->DoorType. ' Side Light 2',
-                    $value->doorNumber,
+                    (string) $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->SideLight2GlazingBeadSpeciesName,
@@ -547,5 +551,15 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
     public function title(): string
     {
         return 'Glazing Beads for Doors';
+    }
+
+    public function bindValue(Cell $cell, $value): bool
+    {
+        if (is_numeric($value)) {
+            $cell->setValueExplicit($value, DataType::TYPE_STRING);
+            return true;
+        }
+
+        return parent::bindValue($cell, $value);
     }
 }

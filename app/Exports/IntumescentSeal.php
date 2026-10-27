@@ -9,8 +9,12 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 use App\Models\Item;
 use App\Models\SettingIntumescentSeals2;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
 
-class IntumescentSeal implements FromCollection, WithHeadings, WithEvents, WithTitle
+class IntumescentSeal extends DefaultValueBinder implements FromCollection, WithHeadings, WithEvents, WithTitle
 {
     protected $id, $vid, $result;
 
@@ -111,5 +115,15 @@ class IntumescentSeal implements FromCollection, WithHeadings, WithEvents, WithT
     public function title(): string
     {
         return 'Intumescent Seal';
+    }
+
+    public function bindValue(Cell $cell, $value): bool
+    {
+        if (is_numeric($value)) {
+            $cell->setValueExplicit($value, DataType::TYPE_STRING);
+            return true;
+        }
+
+        return parent::bindValue($cell, $value);
     }
 }

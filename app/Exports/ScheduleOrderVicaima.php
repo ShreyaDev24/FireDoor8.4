@@ -16,8 +16,12 @@ use App\Models\CustomerContact;
 use App\Models\QuotationVersion;
 use App\Models\Company;
 use Auth;
+use Maatwebsite\Excel\Concerns\WithCustomValueBinder;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Cell\DefaultValueBinder;
 
-class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
+class ScheduleOrderVicaima extends DefaultValueBinder implements FromCollection,WithHeadings,WithEvents,WithCustomValueBinder
 {
     public function __construct(
         /**
@@ -90,7 +94,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
         //Item master info
             $FrameOnOff = $item[$i]->FrameOnOff ?? 0;
             $Floor = $item[$i]->floor;
-            $DoorNumber = $item[$i]->doorNumber;
+            $DoorNumber = (string) $item[$i]->doorNumber;
             $location = $item[$i]->location;
 
         //Main options
@@ -851,5 +855,15 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
             },
         ];
+    }
+
+    public function bindValue(Cell $cell, $value): bool
+    {
+        if (is_numeric($value)) {
+            $cell->setValueExplicit($value, DataType::TYPE_STRING);
+            return true;
+        }
+
+        return parent::bindValue($cell, $value);
     }
 }
