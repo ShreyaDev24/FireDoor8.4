@@ -109,6 +109,7 @@ class FramesTransoms extends DefaultValueBinder implements
             'IFC/Certifire No/Q mark Plug',
             'Door Core',
             'Door Type',
+            'Floor No',
             'Ironmongery Ref',
             'Fire Rating',
             'Door Thickness',
@@ -249,6 +250,7 @@ class FramesTransoms extends DefaultValueBinder implements
                 $value->certification_no,
                 doorcorename($value->configurableitems),
                 $value->DoorType,
+                $value->floor,
                 IronmongerySetName($value->IronmongeryID),
                 $value->FireRating,
                 $value->LeafThickness,
@@ -342,6 +344,7 @@ class FramesTransoms extends DefaultValueBinder implements
                     $value->certification_no,
                     doorcorename($value->configurableitems),
                     $value->DoorType . ' '. $value->Overpanel,
+                    $value->floor,
                     IronmongerySetName($value->IronmongeryID),
                     $value->FireRating,
                     $value->LeafThickness,
@@ -420,6 +423,7 @@ class FramesTransoms extends DefaultValueBinder implements
                     $value->certification_no,
                     doorcorename($value->configurableitems),
                     $value->DoorType . ' Side Light 1',
+                    $value->floor,
                     IronmongerySetName($value->IronmongeryID),
                     $value->FireRating,
                     $value->LeafThickness,
@@ -498,6 +502,7 @@ class FramesTransoms extends DefaultValueBinder implements
                     $value->certification_no,
                     doorcorename($value->configurableitems),
                     $value->DoorType . ' Side Light 2',
+                    $value->floor,
                     IronmongerySetName($value->IronmongeryID),
                     $value->FireRating,
                     $value->LeafThickness,
@@ -730,7 +735,7 @@ class FramesTransoms extends DefaultValueBinder implements
                 // Auto-size all columns A to AC
                 // ----------------------------------------------------------
                 $col = 'A';
-                while ($col !== 'AI') { // Adjust as per your last column
+                while ($col !== 'AJ') { // Adjust as per your last column
                     $sheet->getColumnDimension($col)->setAutoSize(true);
                     $col++;
                 }
@@ -802,8 +807,8 @@ class FramesTransoms extends DefaultValueBinder implements
 
                     // ✅ Green title (merged and bordered top/bottom)
                     if (in_array($val, ['Door Order Sheet', 'Frames and Transoms'])) {
-                        $sheet->mergeCells("A{$i}:AI{$i}");
-                        $sheet->getStyle("A{$i}:AI{$i}")->applyFromArray($mainTitleStyle);
+                        $sheet->mergeCells("A{$i}:AJ{$i}");
+                        $sheet->getStyle("A{$i}:AJ{$i}")->applyFromArray($mainTitleStyle);
                     }
 
                     // ✅ Green title for "SCREEN INFO"
@@ -814,7 +819,7 @@ class FramesTransoms extends DefaultValueBinder implements
 
                     // ✅ Red underline for Door Section header
                     if ($val === 'Door Number') {
-                        $sheet->getStyle("A{$i}:AI{$i}")->applyFromArray($headerRowStyle);
+                        $sheet->getStyle("A{$i}:AJ{$i}")->applyFromArray($headerRowStyle);
                     }
 
                     // ✅ Red underline for Screen Info section header

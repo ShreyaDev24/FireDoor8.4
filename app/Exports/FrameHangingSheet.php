@@ -28,7 +28,7 @@ class FrameHangingSheet extends DefaultValueBinder implements
 
     public function collection()
     {
-        $item = Item::Join('item_master','items.itemId','item_master.itemID')->where('QuotationId',$this->id)->where('VersionId',$this->vid)->select('item_master.doorNumber','items.SOHeight', 'items.SOWidth', 'items.SOWallThick', 'items.DoorType', 'items.DoorLeafFinish', 'items.DoorLeafFacing', 'items.LippingType', 'items.LippingSpecies', 'items.LeafWidth1', 'items.LeafWidth2', 'items.LeafHeight', 'items.FrameThickness', 'items.Undercut', 'items.Handing','items.FireRating')->orderBy('items.itemId','ASC')->get();
+        $item = Item::Join('item_master','items.itemId','item_master.itemID')->where('QuotationId',$this->id)->where('VersionId',$this->vid)->select('item_master.doorNumber','item_master.floor','items.SOHeight', 'items.SOWidth', 'items.SOWallThick', 'items.DoorType', 'items.DoorLeafFinish', 'items.DoorLeafFacing', 'items.LippingType', 'items.LippingSpecies', 'items.LeafWidth1', 'items.LeafWidth2', 'items.LeafHeight', 'items.FrameThickness', 'items.Undercut', 'items.Handing','items.FireRating')->orderBy('items.itemId','ASC')->get();
         $data = [];
         $lineNo = 1;
         foreach($item as $value){
@@ -36,6 +36,7 @@ class FrameHangingSheet extends DefaultValueBinder implements
             $data[] = array(
                 $lineNo++,
                 (string) $value->doorNumber,
+                $value->floor,
                 $value->SOHeight,
                 $value->SOWidth,
                 $value->SOWallThick,
@@ -70,6 +71,7 @@ class FrameHangingSheet extends DefaultValueBinder implements
         $headerRow = [
             'Line No.',
             'Door No.',
+            'Floor',
             'S.O Height',
             'S.O Width',
             'S.O Wall Thick',
@@ -96,12 +98,12 @@ class FrameHangingSheet extends DefaultValueBinder implements
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 $sheet = $event->sheet;
-                foreach (range('A', 'R') as $col) {
+                foreach (range('A', 'S') as $col) {
                     $sheet->getColumnDimension($col)->setAutoSize(true);
                 }
 
-                $cellRange1 = 'A1:R1';
-                $cellRange2 = 'A2:R2';
+                $cellRange1 = 'A1:S1';
+                $cellRange2 = 'A2:S2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
