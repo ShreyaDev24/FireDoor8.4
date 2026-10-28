@@ -137,6 +137,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $value->certification_no,
                 $value->doorNumber,
                 $value->DoorType,
+                $value->floor,
                 $value->FireRating,
                 $value->LeafThickness,
                 $configurableitems,
@@ -189,6 +190,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                     $value->certification_no,
                     $value->doorNumber,
                     $value->DoorType.' OP LEAF SIZE',
+                    $value->floor,
                     $value->FireRating,
                     $value->LeafThickness,
                     $configurableitems,
@@ -424,6 +426,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 'IFC/Certifire No/Q mark Plug',
                 'Door Number',
                 'Door Type',
+                'Floor No',
                 'Fire Rating',
                 'Door Thickness',
                 'Door Mat',
@@ -462,8 +465,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 // 🔹 Existing header styling
                 // ----------------------------
                 if($this->section != 'Summary'){
-                    $cellRange1 = 'A1:Z1'; // main merged header
-                    $cellRange2 = 'A2:Z2'; // column headings row
+                    $cellRange1 = 'A1:AA1'; // main merged header
+                    $cellRange2 = 'A2:AA2'; // column headings row
                 }else{
                     $cellRange1 = 'A1:H1'; // main merged header
                     $cellRange2 = 'A2:H2'; // column headings row
@@ -493,6 +496,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 foreach (range('A', 'Z') as $col) {
                     $event->sheet->getColumnDimension($col)->setAutoSize(true);
                 }
+                $event->sheet->getColumnDimension('AA')->setAutoSize(true);
 
                 // ----------------------------
                 // 🔹 New Summary Header Styling

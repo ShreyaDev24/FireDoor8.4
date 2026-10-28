@@ -100,6 +100,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             'Plot Number/Ref',
             'IFC/Certifire No/Q mark Plug',
             'Door Type',
+            'Floor No',
             'Ironmongery Ref',
             'Fire Rating',
             'Door Thickness',
@@ -237,6 +238,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $value->plot_ref_no,
                 $value->certification_no,
                 $value->DoorType,
+                $value->floor,
                 IronmongerySetName($value->IronmongeryID),
                 $value->FireRating,
                 $value->LeafThickness,
@@ -328,6 +330,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->DoorType . ' '. $value->Overpanel,
+                    $value->floor,
                     IronmongerySetName($value->IronmongeryID),
                     $value->FireRating,
                     $value->LeafThickness,
@@ -404,6 +407,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->DoorType . ' Side Light 1',
+                    $value->floor,
                     IronmongerySetName($value->IronmongeryID),
                     $value->FireRating,
                     $value->LeafThickness,
@@ -480,6 +484,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->DoorType . ' Side Light 2',
+                    $value->floor,
                     IronmongerySetName($value->IronmongeryID),
                     $value->FireRating,
                     $value->LeafThickness,
@@ -711,7 +716,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 // Auto-size all columns A to AC
                 // ----------------------------------------------------------
                 $col = 'A';
-                while ($col !== 'AG') { // Adjust as per your last column
+                while ($col !== 'AH') { // Adjust as per your last column
                     $sheet->getColumnDimension($col)->setAutoSize(true);
                     $col++;
                 }
@@ -783,8 +788,8 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
 
                     // ✅ Green title (merged and bordered top/bottom)
                     if (in_array($val, ['Door Order Sheet', 'Frames and Transoms'])) {
-                        $sheet->mergeCells("A{$i}:AG{$i}");
-                        $sheet->getStyle("A{$i}:AG{$i}")->applyFromArray($mainTitleStyle);
+                        $sheet->mergeCells("A{$i}:AH{$i}");
+                        $sheet->getStyle("A{$i}:AH{$i}")->applyFromArray($mainTitleStyle);
                     }
 
                     // ✅ Green title for "SCREEN INFO"
@@ -795,7 +800,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
 
                     // ✅ Red underline for Door Section header
                     if ($val === 'Door Number') {
-                        $sheet->getStyle("A{$i}:AG{$i}")->applyFromArray($headerRowStyle);
+                        $sheet->getStyle("A{$i}:AH{$i}")->applyFromArray($headerRowStyle);
                     }
 
                     // ✅ Red underline for Screen Info section header
