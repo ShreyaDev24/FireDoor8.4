@@ -10088,4 +10088,24 @@ private function getQuotationGrandTotal($quotationId, $versionId)
         }
         return Excel::download(new HangingDocumentExport($quotationId,$versionID), "Worksheet ".trim($quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx');
     }
+
+
+    public function checkPdfMemory()
+    {
+        return response()->json([
+            'php_version' => PHP_VERSION,
+            'memory_limit' => ini_get('memory_limit'),
+            'max_execution_time' => ini_get('max_execution_time'),
+            'loaded_php_ini' => php_ini_loaded_file(),
+            'current_memory_mb' => round(
+                memory_get_usage(true) / 1024 / 1024,
+                2
+            ),
+            'peak_memory_mb' => round(
+                memory_get_peak_usage(true) / 1024 / 1024,
+                2
+            ),
+        ]);
+    }
+
 }
