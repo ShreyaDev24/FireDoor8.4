@@ -94,6 +94,7 @@ class PrintInvoiceController extends Controller
     {
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '4096M');
+        $__t0 = microtime(true); // TIMING-LOG
 
         $quatationId = $quatationId;
 
@@ -271,6 +272,7 @@ class PrintInvoiceController extends Controller
         $path2 = public_path() . '/allpdfFile';
         $fileName2 = $id . '2' . '.' . 'pdf';
         $pdf2->save($path2 . '/' . $fileName2);
+        \Log::info('PDFTIMING 2 intro + summary pdf done', ['s' => round(microtime(true) - $__t0, 1), 'peak_mb' => round(memory_get_peak_usage(true) / 1048576)]); // TIMING-LOG
 
         $QuotationShipToInformation = QuotationShipToInformation::where('QuotationId', $quatationId)->first();
         $QuotationSiteDelivery = QuotationSiteDeliveryAddress::where('QuotationId', $quatationId)->get();
@@ -484,6 +486,7 @@ class PrintInvoiceController extends Controller
         $path4_2 = public_path() . '/allpdfFile';
         $fileName4_2 = $id . '4_2' . '.' . 'pdf';
         $pdf4_2->save($path4_2 . '/' . $fileName4_2);
+        \Log::info('PDFTIMING 3 pdf3 + nonconfig done', ['s' => round(microtime(true) - $__t0, 1), 'peak_mb' => round(memory_get_peak_usage(true) / 1048576)]); // TIMING-LOG
 
 
 
@@ -965,6 +968,7 @@ class PrintInvoiceController extends Controller
         }
 
         $Alltotalpriceperdoorset = $SumDoorsetPrice + $SumIronmongaryPrice;
+        \Log::info('PDFTIMING 4 door schedule loop done', ['s' => round(microtime(true) - $__t0, 1), 'peak_mb' => round(memory_get_peak_usage(true) / 1048576)]); // TIMING-LOG
 
         $a .= '
                     <tr>
@@ -996,6 +1000,7 @@ class PrintInvoiceController extends Controller
         $fileName4 = $id . '4' . '.' . 'pdf';
         $this->renderPdfInChunks($aChunks, $path4 . '/' . $fileName4, fn($html) => PDF::loadView($doorListView, ['a' => $html, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]));
         unset($aRows, $aChunks);
+        \Log::info('PDFTIMING 5 door schedule render done', ['s' => round(microtime(true) - $__t0, 1), 'peak_mb' => round(memory_get_peak_usage(true) / 1048576)]); // TIMING-LOG
         // side screen door list
 
         $s2 = '';
@@ -1023,6 +1028,7 @@ class PrintInvoiceController extends Controller
 
         // Elevation Drawing
         $elevTbl = '';
+        \Log::info('PDFTIMING 6 before elevation loop', ['s' => round(microtime(true) - $__t0, 1), 'peak_mb' => round(memory_get_peak_usage(true) / 1048576)]); // TIMING-LOG
         // $ed = Item::where('QuotationId',$quatationId)->get();
         // $ed = Item::join('item_master','item_master.itemID','=','items.itemId')->join("quotation_version_items",function($join): void{
         //     $join->on("quotation_version_items.itemID","=","items.itemId")
@@ -3606,6 +3612,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             $elevChunks = [$elevTbl];
         }
         $this->renderPdfInChunks($elevChunks, $path6 . '/' . $fileName6, fn($html) => PDF::loadView('Company.pdf_files.elevationDrawing', ['elevTbl' => $html]));
+        \Log::info('PDFTIMING 7 elevation render done', ['s' => round(microtime(true) - $__t0, 1), 'peak_mb' => round(memory_get_peak_usage(true) / 1048576)]); // TIMING-LOG
         // back page design
 
 
@@ -3968,6 +3975,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         $path5 = public_path() . '/allpdfFile';
         $fileName5 = $id . '5' . '.' . 'pdf';
         $pdf5->save($path5 . '/' . $fileName5);
+        \Log::info('PDFTIMING 8 before merge (side screens, ironmongery, docs done)', ['s' => round(microtime(true) - $__t0, 1), 'peak_mb' => round(memory_get_peak_usage(true) / 1048576)]); // TIMING-LOG
 
 
 
@@ -4106,6 +4114,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             $quo->save();
 
             // unlink($mergedFilePath); (27-11-2024 comment these code bcs it deleted the file to the system and getting 404 not found when send to client the quotations.)
+        \Log::info('PDFTIMING 9 end (merge+fpdi done)', ['s' => round(microtime(true) - $__t0, 1), 'peak_mb' => round(memory_get_peak_usage(true) / 1048576)]); // TIMING-LOG
 
             foreach ($pdfFiles as $unlinkPath) {
                 unlink($unlinkPath);
