@@ -57,6 +57,39 @@ class PrintInvoiceController extends Controller
         $this->middleware('auth')->except(['printinvoiceclient','signaturesubmit']);
     }
 
+    /**
+     * Render big HTML in chunks so DomPDF never holds the whole document in memory,
+     * then merge the chunks into one file at $targetPath.
+     * $renderChunk receives one chunk's HTML and returns a DomPDF instance.
+     */
+    private function renderPdfInChunks(array $chunks, string $targetPath, callable $renderChunk): void
+    {
+        $tmpFiles = [];
+        foreach (array_values($chunks) as $n => $html) {
+            $tmp = $targetPath . '.part' . $n . '.pdf';
+            $pdf = $renderChunk($html);
+            $pdf->save($tmp);
+            $tmpFiles[] = $tmp;
+            unset($pdf);
+            gc_collect_cycles();
+        }
+
+        if (count($tmpFiles) === 1) {
+            rename($tmpFiles[0], $targetPath);
+            return;
+        }
+
+        $merger = PDFMerger::init();
+        foreach ($tmpFiles as $f) {
+            $merger->addPDF($f, 'all');
+        }
+        $merger->merge();
+        $merger->save($targetPath);
+        foreach ($tmpFiles as $f) {
+            unlink($f);
+        }
+    }
+
     public function printinvoice($quatationId, $versionID, $isActive = null , $userid = null,$clientclick=null): mixed
     {
         ini_set('max_execution_time', 0);
@@ -457,6 +490,7 @@ class PrintInvoiceController extends Controller
         //PDF 2
         $CompanyId = get_company_id($id)->id;
         $a = '';
+        $aRows = [];
         $i = 1;
         $DoorQuantity = 0;
         $DoorsetPrice = 0;
@@ -484,8 +518,6 @@ class PrintInvoiceController extends Controller
             // $IronmongaryPrice += $show->IronmongaryPrice;
 
 
-            $grand_total = BOMDetails::where('itemId', $show->itemId)->sum('grand_total');
-            $labour_total = BOMDetails::where('itemId', $show->itemId)->sum('labour_total');
             $basePrice = floatval($show->DoorsetPrice);
             $leafDelta = floatval($show->leaf_price_delta ?? 0);
 
@@ -926,6 +958,8 @@ class PrintInvoiceController extends Controller
             }
 
             $i++;
+            $aRows[] = $a;
+            $a = '';
             //     }
             // }
         }
@@ -947,16 +981,21 @@ class PrintInvoiceController extends Controller
                 ';
 
 
-        if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 5 || $quotaion->configurableitems == 6 || $quotaion->configurableitems == 9){
-            $pdf4 = PDF::loadView('Company.pdf_files.vicaima.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
-        }else{
-            $pdf4 = PDF::loadView('Company.pdf_files.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
-        }
+        $doorListView = ($quotaion->configurableitems == 4 || $quotaion->configurableitems == 5 || $quotaion->configurableitems == 6 || $quotaion->configurableitems == 9)
+            ? 'Company.pdf_files.vicaima.pdf2'
+            : 'Company.pdf_files.pdf2';
 
-        // return $pdf4->download('file4.pdf');
-            $path4 = public_path() . '/allpdfFile';
-            $fileName4 = $id . '4' . '.' . 'pdf';
-            $pdf4->save($path4 . '/' . $fileName4);
+        // Render in chunks of 100 doors; the totals row goes on the last chunk only
+        $aChunks = array_map('implode', array_chunk($aRows, 100));
+        if (empty($aChunks)) {
+            $aChunks = [''];
+        }
+        $aChunks[array_key_last($aChunks)] .= $a;
+
+        $path4 = public_path() . '/allpdfFile';
+        $fileName4 = $id . '4' . '.' . 'pdf';
+        $this->renderPdfInChunks($aChunks, $path4 . '/' . $fileName4, fn($html) => PDF::loadView($doorListView, ['a' => $html, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]));
+        unset($aRows, $aChunks);
         // side screen door list
 
         $s2 = '';
@@ -3558,10 +3597,15 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
         // return $elevTbl;
         // return view('Company.pdf_files.elevationDrawing', compact('elevTbl'));
-        $pdf6 = PDF::loadView('Company.pdf_files.elevationDrawing', ['elevTbl' => $elevTbl]);
         $path6 = public_path() . '/allpdfFile';
         $fileName6 = $id . '6' . '.' . 'pdf';
-        $pdf6->save($path6 . '/' . $fileName6);
+        $elevSep = '<div class="page-break"></div>';
+        $elevParts = array_values(array_filter(explode($elevSep, $elevTbl), fn($p) => trim($p) !== ''));
+        $elevChunks = array_map(fn($g) => implode($elevSep, $g), array_chunk($elevParts, 10));
+        if (empty($elevChunks)) {
+            $elevChunks = [$elevTbl];
+        }
+        $this->renderPdfInChunks($elevChunks, $path6 . '/' . $fileName6, fn($html) => PDF::loadView('Company.pdf_files.elevationDrawing', ['elevTbl' => $html]));
         // back page design
 
 
@@ -4450,8 +4494,6 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             // $IronmongaryPrice += $show->IronmongaryPrice;
 
 
-            $grand_total = BOMDetails::where('itemId', $show->itemId)->sum('grand_total');
-            $labour_total = BOMDetails::where('itemId', $show->itemId)->sum('labour_total');
             $DoorsetPrice = (($show->AdjustPrice)?floatval($show->AdjustPrice) :floatval($show->DoorsetPrice));
             $IronmongaryPrice = 0;
             if (!empty($show->IronmongeryID)) {
