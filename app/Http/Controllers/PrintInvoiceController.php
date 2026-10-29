@@ -4081,7 +4081,9 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         \Log::info('PDFTIMING 8c fpdi page-number pass done', ['s' => round(microtime(true) - $__t0, 1), 'peak_mb' => round(memory_get_peak_usage(true) / 1048576)]); // TIMING-LOG
             // Save the final PDF
             $pdf->Output($PDFfilename, 'F');
+        \Log::info('PDFTIMING 8d first Output F done', ['s' => round(microtime(true) - $__t0, 1), 'peak_mb' => round(memory_get_peak_usage(true) / 1048576)]); // TIMING-LOG
             $pdf->Output($quotaion->QuotationGenerationId . '_' . $version . '.pdf', 'D');
+        \Log::info('PDFTIMING 8e first Output D done', ['s' => round(microtime(true) - $__t0, 1), 'peak_mb' => round(memory_get_peak_usage(true) / 1048576)]); // TIMING-LOG
             // Source file path
             $pageCount = $pdf->setSourceFile($mergedFilePath);
 
@@ -4108,7 +4110,9 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
             // Save the final PDF
             $pdf->Output($PDFfilename, 'F');
+        \Log::info('PDFTIMING 9c second Output F done', ['s' => round(microtime(true) - $__t0, 1), 'peak_mb' => round(memory_get_peak_usage(true) / 1048576)]); // TIMING-LOG
             $pdf->Output($quotaion->QuotationGenerationId . '_' . $version . '.pdf', 'D');
+        \Log::info('PDFTIMING 9d second Output D done', ['s' => round(microtime(true) - $__t0, 1), 'peak_mb' => round(memory_get_peak_usage(true) / 1048576)]); // TIMING-LOG
             // end code
 
             $quo = Quotation::find($quatationId);
