@@ -254,50 +254,6 @@
 
                             <div class="col-md-6">
                                 <div class="field-name">
-                                    <input type='checkbox' class='check-btn'  id='DoorLeafFinishPrimed' name='DoorLeafFinishPrimed' @if(!empty($set->DoorLeafFinishPrimed) && $set->DoorLeafFinishPrimed== 1){{ 'checked' }}@endif>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <h5 class="fieldset" style="margin-top: 10px"><span>Door Leaf Finish Primed(Prime of door slab)</span></h5>
-                                        </div>
-                                        <input type="hidden" class="DoorLeafFinishPrimed" name="type[]" value="DoorLeafFinishPrimed">
-                                        <div class="col-md-6">
-                                            <div class="position-relative form-group">
-                                                <label>Man Minute</label>
-                                                <input type="number" min="0" onkeydown="if(event.key==='.'){event.preventDefault();}" name="door_leaf_finish_primed_man_minute" class="form-control DoorLeafFinishPrimed"
-                                                    value="@if(!empty($set)){{$set->DoorLeafFinishPrimedManMinutes}}@endif"
-                                                    required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="position-relative form-group">
-                                                <label>Machine Minute</label>
-                                                <input type="number" min="0" onkeydown="if(event.key==='.'){event.preventDefault();}" name="door_leaf_finish_primed_machine_minute" class="form-control DoorLeafFinishPrimed"
-                                                    value="@if(!empty($set)){{$set->DoorLeafFinishPrimedMachineMinutes}}@endif" required>
-                                            </div>
-                                        </div>
-                                        @php
-                                        $data = getMyLaborCost('DoorLeafFinishPrimed', $set->genLaborCost ?? '');
-                                        @endphp
-                                        <div class="col-md-6">
-                                            <div class="position-relative form-group">
-                                                <label>Per Man<span class="text-danger">*</span></label>
-                                                <input type="number" pattern="[0-9]+(\.[0-9][0-9]?)?" step="0.01" min="0"  name="labour_cost_per_man[]" class="form-control DoorLeafFinishPrimed"
-                                                    value="@if(isset($data->labour_cost_per_man)){{$data->labour_cost_per_man}}@else{{ $bomSetting->labour_cost_per_man }}@endif">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="position-relative form-group">
-                                                <label>Per Machine<span class="text-danger">*</span></label>
-                                                <input type="number" pattern="[0-9]+(\.[0-9][0-9]?)?" step="0.01" min="0"  name="labour_cost_per_machine[]" class="form-control DoorLeafFinishPrimed"
-                                                    value="@if(isset($data->labour_cost_per_machine)){{$data->labour_cost_per_machine}}@else{{ $bomSetting->labour_cost_per_machine }}@endif">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="field-name">
                                     <input type='checkbox' class='check-btn'  id='DoorLeafFinishPainted' name='DoorLeafFinishPainted' @if(!empty($set->DoorLeafFinishPainted) && $set->DoorLeafFinishPainted== 1){{ 'checked' }}@endif>
                                     <div class="row">
                                         <div class="col-md-12">
@@ -386,6 +342,73 @@
 
                             <div class="col-md-6">
                                 <div class="field-name">
+                                    <input type='checkbox' class='check-btn'  id='DoorLeafFinishPrimed' name='DoorLeafFinishPrimed' @if(!empty($set->DoorLeafFinishPrimed) && $set->DoorLeafFinishPrimed== 1){{ 'checked' }}@endif>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h5 class="fieldset" style="margin-top: 10px"><span>Door Leaf Finish Primed(Prime of door slab)</span></h5>
+                                        </div>
+                                        <input type="hidden" class="DoorLeafFinishPrimed" name="type[]" value="DoorLeafFinishPrimed">
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Man Minute</label>
+                                                <input type="number" min="0" onkeydown="if(event.key==='.'){event.preventDefault();}" name="door_leaf_finish_primed_man_minute" class="form-control DoorLeafFinishPrimed"
+                                                    value="@if(!empty($set)){{$set->DoorLeafFinishPrimedManMinutes}}@endif"
+                                                    required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Machine Minute</label>
+                                                <input type="number" min="0" onkeydown="if(event.key==='.'){event.preventDefault();}" name="door_leaf_finish_primed_machine_minute" class="form-control DoorLeafFinishPrimed"
+                                                    value="@if(!empty($set)){{$set->DoorLeafFinishPrimedMachineMinutes}}@endif" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Full Primed<span class="text-danger">*</span></label>
+                                                <input type="number" pattern="[0-9]+(\.[0-9][0-9]?)?" step="0.01" min="0"  name="door_leaf_finish_primed_full_minute" class="form-control DoorLeafFinishPrimed"
+                                                    value="@if(!empty($set)){{$set->DoorLeafFinishPrimedFullMinutes}}@endif">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Half Primed<span class="text-danger">*</span></label>
+                                                <input type="number" pattern="[0-9]+(\.[0-9][0-9]?)?" step="0.01" min="0"  name="door_leaf_finish_primed_half_minute" class="form-control DoorLeafFinishPrimed"
+                                                    value="@if(!empty($set)){{$set->DoorLeafFinishPrimedHalfMinutes}}@endif">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Touch up Primed <span class="text-danger">*</span></label>
+                                                <input type="number" pattern="[0-9]+(\.[0-9][0-9]?)?" step="0.01" min="0"  name="door_leaf_finish_primed_touch_up_minute" class="form-control DoorLeafFinishPrimed"
+                                                    value="@if(!empty($set)){{$set->DoorLeafFinishPrimedTouchUpMinutes}}@endif">
+                                            </div>
+                                        </div>
+                                        @php
+                                        $data = getMyLaborCost('DoorLeafFinishPrimed', $set->genLaborCost ?? '');
+                                        @endphp
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Per Man<span class="text-danger">*</span></label>
+                                                <input type="number" pattern="[0-9]+(\.[0-9][0-9]?)?" step="0.01" min="0"  name="labour_cost_per_man[]" class="form-control DoorLeafFinishPrimed"
+                                                    value="@if(isset($data->labour_cost_per_man)){{$data->labour_cost_per_man}}@else{{ $bomSetting->labour_cost_per_man }}@endif">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Per Machine<span class="text-danger">*</span></label>
+                                                <input type="number" pattern="[0-9]+(\.[0-9][0-9]?)?" step="0.01" min="0"  name="labour_cost_per_machine[]" class="form-control DoorLeafFinishPrimed"
+                                                    value="@if(isset($data->labour_cost_per_machine)){{$data->labour_cost_per_machine}}@else{{ $bomSetting->labour_cost_per_machine }}@endif">
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="field-name">
                                     <input type='checkbox' class='check-btn'  id='FrameFinishPrimed' name='FrameFinishPrimed' @if(!empty($set->FrameFinishPrimed) && $set->FrameFinishPrimed== 1){{ 'checked' }}@endif>
                                     <div class="row">
                                         <div class="col-md-12">
@@ -405,6 +428,27 @@
                                                 <label>Machine Minute</label>
                                                 <input type="number" min="0" onkeydown="if(event.key==='.'){event.preventDefault();}" name="frame_finish_primed_machine_minute" class="form-control FrameFinishPrimed"
                                                     value="@if(!empty($set)){{$set->FrameFinishPrimedMachineMinutes}}@endif" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Full Primed<span class="text-danger">*</span></label>
+                                                <input type="number" pattern="[0-9]+(\.[0-9][0-9]?)?" step="0.01" min="0"  name="frame_finish_primed_full_minute" class="form-control FrameFinishPrimed"
+                                                    value="@if(!empty($set)){{$set->FrameFinishPrimedFullMinutes}}@endif">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Half Primed<span class="text-danger">*</span></label>
+                                                <input type="number" pattern="[0-9]+(\.[0-9][0-9]?)?" step="0.01" min="0"  name="frame_finish_primed_half_minute" class="form-control FrameFinishPrimed"
+                                                    value="@if(!empty($set)){{$set->FrameFinishPrimedHalfMinutes}}@endif">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Touch up Primed <span class="text-danger">*</span></label>
+                                                <input type="number" pattern="[0-9]+(\.[0-9][0-9]?)?" step="0.01" min="0"  name="frame_finish_primed_touch_up_minute" class="form-control FrameFinishPrimed"
+                                                    value="@if(!empty($set)){{$set->FrameFinishPrimedTouchUpMinutes}}@endif">
                                             </div>
                                         </div>
                                         @php

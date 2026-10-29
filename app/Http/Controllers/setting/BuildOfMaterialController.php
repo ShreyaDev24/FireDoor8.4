@@ -191,6 +191,9 @@ class BuildOfMaterialController extends Controller
 
             $a->DoorLeafFinishPrimedManMinutes = $request->door_leaf_finish_primed_man_minute;
             $a->DoorLeafFinishPrimedMachineMinutes = $request->door_leaf_finish_primed_machine_minute;
+            $a->DoorLeafFinishPrimedFullMinutes = $request->door_leaf_finish_primed_full_minute;
+            $a->DoorLeafFinishPrimedHalfMinutes = $request->door_leaf_finish_primed_half_minute;
+            $a->DoorLeafFinishPrimedTouchUpMinutes = $request->door_leaf_finish_primed_touch_up_minute;
 
             $a->DoorLeafFinishPaintedManMinutes = $request->door_leaf_finish_painted_man_minute;
             $a->DoorLeafFinishPaintedMachineMinutes = $request->door_leaf_finish_painted_machine_minute;
@@ -200,6 +203,9 @@ class BuildOfMaterialController extends Controller
 
             $a->FrameFinishPrimedManMinutes = $request->frame_finish_primed_man_minute;
             $a->FrameFinishPrimedMachineMinutes = $request->frame_finish_primed_machine_minute;
+            $a->FrameFinishPrimedFullMinutes = $request->frame_finish_primed_full_minute;
+            $a->FrameFinishPrimedHalfMinutes = $request->frame_finish_primed_half_minute;
+            $a->FrameFinishPrimedTouchUpMinutes = $request->frame_finish_primed_touch_up_minute;
 
             $a->FrameFinishPaintedManMinutes = $request->frame_finish_painted_man_minute;
             $a->FrameFinishPaintedMachineMinutes = $request->frame_finish_painted_machine_minute;
