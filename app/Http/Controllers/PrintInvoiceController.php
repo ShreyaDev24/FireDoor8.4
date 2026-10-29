@@ -4050,7 +4050,8 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             $mergedFilePath = public_path() . '/allpdfFile/' . $quotaion->QuotationGenerationId . '_' . $version . '.pdf';
             $pdfMerger->merge();
             $pdfMerger->save($mergedFilePath);
-            $pdfMerger->save(public_path().'/quotationFiles'.'/'.$quotaion->QuotationGenerationId.'_'.$version.'.pdf');
+            copy($mergedFilePath, public_path().'/quotationFiles'.'/'.$quotaion->QuotationGenerationId.'_'.$version.'.pdf');
+        \Log::info('PDFTIMING 8b merge+save done', ['s' => round(microtime(true) - $__t0, 1), 'peak_mb' => round(memory_get_peak_usage(true) / 1048576)]); // TIMING-LOG
 
             $quo = Quotation::find($quatationId);
             $quo->quotTag = 1;
@@ -4077,6 +4078,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 $pdf->SetXY(0, -12); // or -15 if needed
                 $pdf->Cell(0, 10, 'Page ' . $pageNo . ' / ' . $pageCount, 0, 0, 'C');
             }
+        \Log::info('PDFTIMING 8c fpdi page-number pass done', ['s' => round(microtime(true) - $__t0, 1), 'peak_mb' => round(memory_get_peak_usage(true) / 1048576)]); // TIMING-LOG
             // Save the final PDF
             $pdf->Output($PDFfilename, 'F');
             $pdf->Output($quotaion->QuotationGenerationId . '_' . $version . '.pdf', 'D');
