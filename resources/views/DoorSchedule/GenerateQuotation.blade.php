@@ -225,7 +225,7 @@
                                             <li class="docs_menu_group">Production documents</li>
                                             <li><a href="javascript:void(0);" onClick="cuttingList();">All Cut List</a></li>
                                             <li><a href="javascript:void(0);" onClick="ExportSideScreen();">Side Screen Cut List</a></li>
-                                            <li><a href="javascript:void(0);" onClick="WorksheetHangingDocument();">Worksheet Hanging Document</a></li>
+                                            <li><a href="javascript:void(0);" onClick="HangingDocument();">Worksheet Hanging  Document</a></li>
                                             {{--  <li><a href="{{route('quotation/storeConfigurableITEM')}}">Store Configurable Item</a></li>  --}}
                                             <li><a href="javascript:void(0);" onClick="ExportFrameExcel();">Frame Excel</a></li>
                                             <li><a href="javascript:void(0);" onClick="QualityControl();">Quality Control</a></li>
