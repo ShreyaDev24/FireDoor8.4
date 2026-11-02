@@ -161,7 +161,7 @@ class BuildOfMaterialController extends Controller
                 $a->created_at = date('Y-m-d H:i:s');
             }
 
-            $checkId = ['DoorLeafFacingVaneer', 'DoorLeafFacingKraftPaper', 'DoorLeafFacingLaminate', 'DoorLeafFacingPVC', 'DoorLeafFinishPrimed','DoorLeafFinishPainted','DoorLeafFinishLacquered','FrameFinishPrimed','FrameFinishPainted','FrameFinishLacqured','ExtLiner', 'ExtLinerandFrameFinish', 'ExtLinerandFrameFinishPainted', 'ExtLinerandFrameFinishLacqured', 'VisionPanel2','DoorLeafFinishPrimed2','DoorLeafFinishPainted2','DoorLeafFinishLacquered2','VisionPanel','VisionPanelandFireRatingFD30','VisionPanelandFireRatingFD60', 'VisionPanelandFireRating2FD30', 'VisionPanelandFireRating2FD60', 'DecorativeGroves','DecorativeGrovesLeaf2', 'DoorsetTypeSD','DoorsetTypeSD2','DoorsetTypeDD','DoorsetTypeDD2','OverpanelFanlight','OverpanelFanlightGlazing','SideLight', 'SideLightGlazing','SideLight2', 'SideLight2Glazing', 'MachiningOfDoorFrame', 'FittingOfIntumescentToFrame', 'FittingOfIntumescentToFrameFD60', 'HingeAssembley','HingeAssembleyLeafandHalfDD','LocksetAssembley','PlotLabelDoorsets','FrameAssembley','PalletPackaging','DoorLeafProtectionPlasticSleeve','DoorLeafProtectionPlasticSleeveFD60','LeafSizing','LeafLiping','LeafCalibration','PaintPrep','VGroves','LabourProcessForScallopedFrame','LabourAssemblyFor4SidedFrame','MachiningOfScreenframe','MachiningOfGlazingBead','MachiningOfTransom','MachiningOfSubFrame','CuttingOfScreenframe','CuttingOfGlazingBead','CuttingOfTransom','CuttingOfSubFrame','ScreenAssembley','TransomAssembley','SubFrameAssembley','FittingOfGlass','FittingOfGlazingSystem','FittingOfGlazingBead','SprayFinishOfScreenframe','SprayFinishGlazingBead','SprayFinishOfTransom','SprayFinishOfSubFrame','PallettingPackaging','LoadingOfLorry'];
+            $checkId = ['DoorLeafFacingVaneer', 'DoorLeafFacingKraftPaper', 'DoorLeafFacingLaminate', 'DoorLeafFacingPVC', 'DoorLeafFinishPrimed','DoorLeafFinishHalfPrimed','DoorLeafFinishTouchUpPrimed','DoorLeafFinishPainted','DoorLeafFinishLacquered','FrameFinishPrimed','FrameFinishHalfPrimed','FrameFinishTouchUpPrimed','FrameFinishPainted','FrameFinishLacqured','ExtLiner', 'ExtLinerandFrameFinish', 'ExtLinerandFrameFinishPainted', 'ExtLinerandFrameFinishLacqured', 'VisionPanel2','DoorLeafFinishPrimed2','DoorLeafFinishPainted2','DoorLeafFinishLacquered2','VisionPanel','VisionPanelandFireRatingFD30','VisionPanelandFireRatingFD60', 'VisionPanelandFireRating2FD30', 'VisionPanelandFireRating2FD60', 'DecorativeGroves','DecorativeGrovesLeaf2', 'DoorsetTypeSD','DoorsetTypeSD2','DoorsetTypeDD','DoorsetTypeDD2','OverpanelFanlight','OverpanelFanlightGlazing','SideLight', 'SideLightGlazing','SideLight2', 'SideLight2Glazing', 'MachiningOfDoorFrame', 'FittingOfIntumescentToFrame', 'FittingOfIntumescentToFrameFD60', 'HingeAssembley','HingeAssembleyLeafandHalfDD','LocksetAssembley','PlotLabelDoorsets','FrameAssembley','PalletPackaging','DoorLeafProtectionPlasticSleeve','DoorLeafProtectionPlasticSleeveFD60','LeafSizing','LeafLiping','LeafCalibration','PaintPrep','VGroves','LabourProcessForScallopedFrame','LabourAssemblyFor4SidedFrame','MachiningOfScreenframe','MachiningOfGlazingBead','MachiningOfTransom','MachiningOfSubFrame','CuttingOfScreenframe','CuttingOfGlazingBead','CuttingOfTransom','CuttingOfSubFrame','ScreenAssembley','TransomAssembley','SubFrameAssembley','FittingOfGlass','FittingOfGlazingSystem','FittingOfGlazingBead','SprayFinishOfScreenframe','SprayFinishGlazingBead','SprayFinishOfTransom','SprayFinishOfSubFrame','PallettingPackaging','LoadingOfLorry'];
 
             $data = '';
             $counter = count($checkId);
@@ -192,6 +192,12 @@ class BuildOfMaterialController extends Controller
             $a->DoorLeafFinishPrimedManMinutes = $request->door_leaf_finish_primed_man_minute;
             $a->DoorLeafFinishPrimedMachineMinutes = $request->door_leaf_finish_primed_machine_minute;
 
+            $a->DoorLeafFinishHalfPrimedManMinutes = $request->door_leaf_finish_half_primed_man_minute;
+            $a->DoorLeafFinishHalfPrimedMachineMinutes = $request->door_leaf_finish_half_primed_machine_minute;
+
+            $a->DoorLeafFinishTouchUpPrimedManMinutes = $request->door_leaf_finish_touch_up_primed_man_minute;
+            $a->DoorLeafFinishTouchUpPrimedMachineMinutes = $request->door_leaf_finish_touch_up_primed_machine_minute;
+
             $a->DoorLeafFinishPaintedManMinutes = $request->door_leaf_finish_painted_man_minute;
             $a->DoorLeafFinishPaintedMachineMinutes = $request->door_leaf_finish_painted_machine_minute;
 
@@ -200,6 +206,12 @@ class BuildOfMaterialController extends Controller
 
             $a->FrameFinishPrimedManMinutes = $request->frame_finish_primed_man_minute;
             $a->FrameFinishPrimedMachineMinutes = $request->frame_finish_primed_machine_minute;
+
+            $a->FrameFinishHalfPrimedManMinutes = $request->frame_finish_half_primed_man_minute;
+            $a->FrameFinishHalfPrimedMachineMinutes = $request->frame_finish_half_primed_machine_minute;
+
+            $a->FrameFinishTouchUpPrimedManMinutes = $request->frame_finish_touch_up_primed_man_minute;
+            $a->FrameFinishTouchUpPrimedMachineMinutes = $request->frame_finish_touch_up_primed_machine_minute;
 
             $a->FrameFinishPaintedManMinutes = $request->frame_finish_painted_man_minute;
             $a->FrameFinishPaintedMachineMinutes = $request->frame_finish_painted_machine_minute;

@@ -298,6 +298,142 @@
 
                             <div class="col-md-6">
                                 <div class="field-name">
+                                    <input type="checkbox" class="check-btn"
+                                        id="DoorLeafFinishHalfPrimed"
+                                        name="DoorLeafFinishHalfPrimed"
+                                        @if(!empty($set->DoorLeafFinishHalfPrimed) && $set->DoorLeafFinishHalfPrimed == 1) checked @endif>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h5 class="fieldset" style="margin-top: 10px">
+                                                <span>Door Leaf Finish Primed(Half Prime of door slab)</span>
+                                            </h5>
+                                        </div>
+
+                                        <input type="hidden" class="DoorLeafFinishHalfPrimed"
+                                            name="type[]" value="DoorLeafFinishHalfPrimed">
+
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Man Minute</label>
+                                                <input type="number" min="0"
+                                                    onkeydown="if(event.key==='.'){event.preventDefault();}"
+                                                    name="door_leaf_finish_half_primed_man_minute"
+                                                    class="form-control DoorLeafFinishHalfPrimed"
+                                                    value="{{ $set->DoorLeafFinishHalfPrimedManMinutes ?? '' }}"
+                                                    required>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Machine Minute</label>
+                                                <input type="number" min="0"
+                                                    onkeydown="if(event.key==='.'){event.preventDefault();}"
+                                                    name="door_leaf_finish_half_primed_machine_minute"
+                                                    class="form-control DoorLeafFinishHalfPrimed"
+                                                    value="{{ $set->DoorLeafFinishHalfPrimedMachineMinutes ?? '' }}"
+                                                    required>
+                                            </div>
+                                        </div>
+
+                                        @php
+                                            $data = getMyLaborCost('DoorLeafFinishHalfPrimed', $set->genLaborCost ?? '');
+                                        @endphp
+
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Per Man<span class="text-danger">*</span></label>
+                                                <input type="number" step="0.01" min="0"
+                                                    name="labour_cost_per_man[]"
+                                                    class="form-control DoorLeafFinishHalfPrimed"
+                                                    value="{{ $data->labour_cost_per_man ?? $bomSetting->labour_cost_per_man }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Per Machine<span class="text-danger">*</span></label>
+                                                <input type="number" step="0.01" min="0"
+                                                    name="labour_cost_per_machine[]"
+                                                    class="form-control DoorLeafFinishHalfPrimed"
+                                                    value="{{ $data->labour_cost_per_machine ?? $bomSetting->labour_cost_per_machine }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="field-name">
+                                    <input type="checkbox" class="check-btn"
+                                        id="DoorLeafFinishTouchUpPrimed"
+                                        name="DoorLeafFinishTouchUpPrimed"
+                                        @if(!empty($set->DoorLeafFinishTouchUpPrimed) && $set->DoorLeafFinishTouchUpPrimed == 1) checked @endif>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h5 class="fieldset" style="margin-top: 10px">
+                                                <span>Door Leaf Finish Primed(Touch up Prime of door slab)</span>
+                                            </h5>
+                                        </div>
+
+                                        <input type="hidden" class="DoorLeafFinishTouchUpPrimed"
+                                            name="type[]" value="DoorLeafFinishTouchUpPrimed">
+
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Man Minute</label>
+                                                <input type="number" min="0"
+                                                    onkeydown="if(event.key==='.'){event.preventDefault();}"
+                                                    name="door_leaf_finish_touch_up_primed_man_minute"
+                                                    class="form-control DoorLeafFinishTouchUpPrimed"
+                                                    value="{{ $set->DoorLeafFinishTouchUpPrimedManMinutes ?? '' }}"
+                                                    required>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Machine Minute</label>
+                                                <input type="number" min="0"
+                                                    onkeydown="if(event.key==='.'){event.preventDefault();}"
+                                                    name="door_leaf_finish_touch_up_primed_machine_minute"
+                                                    class="form-control DoorLeafFinishTouchUpPrimed"
+                                                    value="{{ $set->DoorLeafFinishTouchUpPrimedMachineMinutes ?? '' }}"
+                                                    required>
+                                            </div>
+                                        </div>
+
+                                        @php
+                                            $data = getMyLaborCost('DoorLeafFinishTouchUpPrimed', $set->genLaborCost ?? '');
+                                        @endphp
+
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Per Man<span class="text-danger">*</span></label>
+                                                <input type="number" step="0.01" min="0"
+                                                    name="labour_cost_per_man[]"
+                                                    class="form-control DoorLeafFinishTouchUpPrimed"
+                                                    value="{{ $data->labour_cost_per_man ?? $bomSetting->labour_cost_per_man }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Per Machine<span class="text-danger">*</span></label>
+                                                <input type="number" step="0.01" min="0"
+                                                    name="labour_cost_per_machine[]"
+                                                    class="form-control DoorLeafFinishTouchUpPrimed"
+                                                    value="{{ $data->labour_cost_per_machine ?? $bomSetting->labour_cost_per_machine }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="field-name">
                                     <input type='checkbox' class='check-btn'  id='DoorLeafFinishPainted' name='DoorLeafFinishPainted' @if(!empty($set->DoorLeafFinishPainted) && $set->DoorLeafFinishPainted== 1){{ 'checked' }}@endif>
                                     <div class="row">
                                         <div class="col-md-12">
@@ -422,6 +558,146 @@
                                                 <label>Per Machine<span class="text-danger">*</span></label>
                                                 <input type="number" pattern="[0-9]+(\.[0-9][0-9]?)?" step="0.01" min="0"  name="labour_cost_per_machine[]" class="form-control FrameFinishPrimed"
                                                     value="@if(isset($data->labour_cost_per_machine)){{$data->labour_cost_per_machine}}@else{{ $bomSetting->labour_cost_per_machine }}@endif">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="field-name">
+                                    <input type="checkbox" class="check-btn"
+                                        id="FrameFinishHalfPrimed"
+                                        name="FrameFinishHalfPrimed"
+                                        @if(!empty($set->FrameFinishHalfPrimed) && $set->FrameFinishHalfPrimed == 1) checked @endif>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h5 class="fieldset" style="margin-top: 10px">
+                                                <span>Frame Finish Primed(Half Prime of door slab)</span>
+                                            </h5>
+                                        </div>
+
+                                        <input type="hidden" class="FrameFinishHalfPrimed"
+                                            name="type[]" value="FrameFinishHalfPrimed">
+
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Man Minute</label>
+                                                <input type="number" min="0"
+                                                    onkeydown="if(event.key==='.'){event.preventDefault();}"
+                                                    name="frame_finish_half_primed_man_minute"
+                                                    class="form-control FrameFinishHalfPrimed"
+                                                    value="{{ $set->FrameFinishHalfPrimedManMinutes ?? '' }}"
+                                                    required>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Machine Minute</label>
+                                                <input type="number" min="0"
+                                                    onkeydown="if(event.key==='.'){event.preventDefault();}"
+                                                    name="frame_finish_half_primed_machine_minute"
+                                                    class="form-control FrameFinishHalfPrimed"
+                                                    value="{{ $set->FrameFinishHalfPrimedMachineMinutes ?? '' }}"
+                                                    required>
+                                            </div>
+                                        </div>
+
+                                        @php
+                                            $data = getMyLaborCost('FrameFinishHalfPrimed', $set->genLaborCost ?? '');
+                                        @endphp
+
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Per Man<span class="text-danger">*</span></label>
+                                                <input type="number" pattern="[0-9]+(\.[0-9][0-9]?)?"
+                                                    step="0.01" min="0"
+                                                    name="labour_cost_per_man[]"
+                                                    class="form-control FrameFinishHalfPrimed"
+                                                    value="{{ $data->labour_cost_per_man ?? $bomSetting->labour_cost_per_man }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Per Machine<span class="text-danger">*</span></label>
+                                                <input type="number" pattern="[0-9]+(\.[0-9][0-9]?)?"
+                                                    step="0.01" min="0"
+                                                    name="labour_cost_per_machine[]"
+                                                    class="form-control FrameFinishHalfPrimed"
+                                                    value="{{ $data->labour_cost_per_machine ?? $bomSetting->labour_cost_per_machine }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="field-name">
+                                    <input type="checkbox" class="check-btn"
+                                        id="FrameFinishTouchUpPrimed"
+                                        name="FrameFinishTouchUpPrimed"
+                                        @if(!empty($set->FrameFinishTouchUpPrimed) && $set->FrameFinishTouchUpPrimed == 1) checked @endif>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h5 class="fieldset" style="margin-top: 10px">
+                                                <span>Frame Finish Primed(Touch up Prime of door slab)</span>
+                                            </h5>
+                                        </div>
+
+                                        <input type="hidden" class="FrameFinishTouchUpPrimed"
+                                            name="type[]" value="FrameFinishTouchUpPrimed">
+
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Man Minute</label>
+                                                <input type="number" min="0"
+                                                    onkeydown="if(event.key==='.'){event.preventDefault();}"
+                                                    name="frame_finish_touch_up_primed_man_minute"
+                                                    class="form-control FrameFinishTouchUpPrimed"
+                                                    value="{{ $set->FrameFinishTouchUpPrimedManMinutes ?? '' }}"
+                                                    required>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Machine Minute</label>
+                                                <input type="number" min="0"
+                                                    onkeydown="if(event.key==='.'){event.preventDefault();}"
+                                                    name="frame_finish_touch_up_primed_machine_minute"
+                                                    class="form-control FrameFinishTouchUpPrimed"
+                                                    value="{{ $set->FrameFinishTouchUpPrimedMachineMinutes ?? '' }}"
+                                                    required>
+                                            </div>
+                                        </div>
+
+                                        @php
+                                            $data = getMyLaborCost('FrameFinishTouchUpPrimed', $set->genLaborCost ?? '');
+                                        @endphp
+
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Per Man<span class="text-danger">*</span></label>
+                                                <input type="number" pattern="[0-9]+(\.[0-9][0-9]?)?"
+                                                    step="0.01" min="0"
+                                                    name="labour_cost_per_man[]"
+                                                    class="form-control FrameFinishTouchUpPrimed"
+                                                    value="{{ $data->labour_cost_per_man ?? $bomSetting->labour_cost_per_man }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="position-relative form-group">
+                                                <label>Per Machine<span class="text-danger">*</span></label>
+                                                <input type="number" pattern="[0-9]+(\.[0-9][0-9]?)?"
+                                                    step="0.01" min="0"
+                                                    name="labour_cost_per_machine[]"
+                                                    class="form-control FrameFinishTouchUpPrimed"
+                                                    value="{{ $data->labour_cost_per_machine ?? $bomSetting->labour_cost_per_machine }}">
                                             </div>
                                         </div>
                                     </div>
@@ -3312,7 +3588,7 @@
     });
 
     $('#check_all').click(function() {
-        var checkId = ['DoorLeafFacingVaneer', 'DoorLeafFacingKraftPaper', 'DoorLeafFacingLaminate', 'DoorLeafFacingPVC', 'DoorLeafFinishPrimed','DoorLeafFinishPainted','DoorLeafFinishLacquered','FrameFinishPrimed','FrameFinishPainted','FrameFinishLacqured','ExtLiner', 'ExtLinerandFrameFinish', 'ExtLinerandFrameFinishPainted', 'ExtLinerandFrameFinishLacqured', 'VisionPanel2','DoorLeafFinishPrimed2','DoorLeafFinishPainted2','DoorLeafFinishLacquered2','VisionPanel','VisionPanelandFireRatingFD30','VisionPanelandFireRatingFD60', 'VisionPanelandFireRating2FD30', 'VisionPanelandFireRating2FD60', 'DecorativeGroves','DecorativeGrovesLeaf2', 'DoorsetTypeSD','DoorsetTypeSD2','DoorsetTypeDD','DoorsetTypeDD2','OverpanelFanlight','OverpanelFanlightGlazing','SideLight','SideLight2', 'SideLightGlazing','SideLight2Glazing', 'MachiningOfDoorFrame', 'FittingOfIntumescentToFrame','FittingOfIntumescentToFrameFD60', 'HingeAssembley','HingeAssembley','LocksetAssembley','PlotLabelDoorsets','FrameAssembley','PalletPackaging','DoorLeafProtectionPlasticSleeve','DoorLeafProtectionPlasticSleeveFD60','LeafSizing','LeafLiping','LeafCalibration','PaintPrep', 'LabourProcessForScallopedFrame', 'LabourAssemblyFor4SidedFrame','MachiningOfScreenframe','MachiningOfGlazingBead','MachiningOfTransom','MachiningOfSubFrame','CuttingOfScreenframe','CuttingOfGlazingBead','CuttingOfTransom','CuttingOfSubFrame','ScreenAssembley','TransomAssembley','SubFrameAssembley','FittingOfGlass','FittingOfGlazingSystem','FittingOfGlazingBead', 'SprayFinishOfScreenframe','SprayFinishGlazingBead','SprayFinishOfTransom','SprayFinishOfSubFrame','PallettingPackaging','LoadingOfLorry','labour_cost_per_man[]','labour_cost_per_machine[]','type[]'];
+        var checkId = ['DoorLeafFacingVaneer', 'DoorLeafFacingKraftPaper', 'DoorLeafFacingLaminate', 'DoorLeafFacingPVC', 'DoorLeafFinishPrimed','DoorLeafFinishHalfPrimed','DoorLeafFinishTouchUpPrimed','DoorLeafFinishPainted','DoorLeafFinishLacquered','FrameFinishPrimed','FrameFinishHalfPrimed','FrameFinishTouchUpPrimed','FrameFinishPainted','FrameFinishLacqured','ExtLiner', 'ExtLinerandFrameFinish', 'ExtLinerandFrameFinishPainted', 'ExtLinerandFrameFinishLacqured', 'VisionPanel2','DoorLeafFinishPrimed2','DoorLeafFinishPainted2','DoorLeafFinishLacquered2','VisionPanel','VisionPanelandFireRatingFD30','VisionPanelandFireRatingFD60', 'VisionPanelandFireRating2FD30', 'VisionPanelandFireRating2FD60', 'DecorativeGroves','DecorativeGrovesLeaf2', 'DoorsetTypeSD','DoorsetTypeSD2','DoorsetTypeDD','DoorsetTypeDD2','OverpanelFanlight','OverpanelFanlightGlazing','SideLight','SideLight2', 'SideLightGlazing','SideLight2Glazing', 'MachiningOfDoorFrame', 'FittingOfIntumescentToFrame','FittingOfIntumescentToFrameFD60', 'HingeAssembley','HingeAssembley','LocksetAssembley','PlotLabelDoorsets','FrameAssembley','PalletPackaging','DoorLeafProtectionPlasticSleeve','DoorLeafProtectionPlasticSleeveFD60','LeafSizing','LeafLiping','LeafCalibration','PaintPrep', 'LabourProcessForScallopedFrame', 'LabourAssemblyFor4SidedFrame','MachiningOfScreenframe','MachiningOfGlazingBead','MachiningOfTransom','MachiningOfSubFrame','CuttingOfScreenframe','CuttingOfGlazingBead','CuttingOfTransom','CuttingOfSubFrame','ScreenAssembley','TransomAssembley','SubFrameAssembley','FittingOfGlass','FittingOfGlazingSystem','FittingOfGlazingBead', 'SprayFinishOfScreenframe','SprayFinishGlazingBead','SprayFinishOfTransom','SprayFinishOfSubFrame','PallettingPackaging','LoadingOfLorry','labour_cost_per_man[]','labour_cost_per_machine[]','type[]'];
         for(i = 0; i < checkId.length; i++){
             if ($(this).is(':checked')) {
                 $('#' + checkId[i]).prop('checked', true);
@@ -3334,7 +3610,7 @@
     });
 
     function checked(){
-        var checkId = ['DoorLeafFacingVaneer', 'DoorLeafFacingKraftPaper', 'DoorLeafFacingLaminate', 'DoorLeafFacingPVC', 'DoorLeafFinishPrimed','DoorLeafFinishPainted','DoorLeafFinishLacquered','FrameFinishPrimed','FrameFinishPainted','FrameFinishLacqured','ExtLiner', 'ExtLinerandFrameFinish', 'ExtLinerandFrameFinishPainted', 'ExtLinerandFrameFinishLacqured', 'VisionPanel2','DoorLeafFinishPrimed2','DoorLeafFinishPainted2','DoorLeafFinishLacquered2','VisionPanel','VisionPanelandFireRatingFD30','VisionPanelandFireRatingFD60', 'VisionPanelandFireRating2FD30', 'VisionPanelandFireRating2FD60', 'DecorativeGroves','DecorativeGrovesLeaf2', 'DoorsetTypeSD','DoorsetTypeSD2','DoorsetTypeDD','DoorsetTypeDD2','OverpanelFanlight','OverpanelFanlightGlazing','SideLight','SideLight2', 'SideLightGlazing','SideLight2Glazing', 'MachiningOfDoorFrame', 'FittingOfIntumescentToFrame','FittingOfIntumescentToFrameFD60', 'HingeAssembley','HingeAssembleyLeafandHalfDD','LocksetAssembley','PlotLabelDoorsets','FrameAssembley','PalletPackaging','DoorLeafProtectionPlasticSleeve','DoorLeafProtectionPlasticSleeveFD60','LeafSizing','LeafLiping','LeafCalibration','PaintPrep','LabourProcessForScallopedFrame', 'LabourAssemblyFor4SidedFrame','MachiningOfScreenframe','MachiningOfGlazingBead','MachiningOfTransom','MachiningOfSubFrame','CuttingOfScreenframe','CuttingOfGlazingBead','CuttingOfTransom','CuttingOfSubFrame','ScreenAssembley','TransomAssembley','SubFrameAssembley','FittingOfGlass','FittingOfGlazingSystem','FittingOfGlazingBead','SprayFinishOfScreenframe','SprayFinishGlazingBead','SprayFinishOfTransom','SprayFinishOfSubFrame','PallettingPackaging','LoadingOfLorry','labour_cost_per_man[]','labour_cost_per_machine[]','type[]'];
+        var checkId = ['DoorLeafFacingVaneer', 'DoorLeafFacingKraftPaper', 'DoorLeafFacingLaminate', 'DoorLeafFacingPVC', 'DoorLeafFinishPrimed','DoorLeafFinishTouchUpPrimed','DoorLeafFinishHalfPrimed','DoorLeafFinishPainted','DoorLeafFinishLacquered','FrameFinishPrimed','FrameFinishHalfPrimed','FrameFinishTouchUpPrimed','FrameFinishPainted','FrameFinishLacqured','ExtLiner', 'ExtLinerandFrameFinish', 'ExtLinerandFrameFinishPainted', 'ExtLinerandFrameFinishLacqured', 'VisionPanel2','DoorLeafFinishPrimed2','DoorLeafFinishPainted2','DoorLeafFinishLacquered2','VisionPanel','VisionPanelandFireRatingFD30','VisionPanelandFireRatingFD60', 'VisionPanelandFireRating2FD30', 'VisionPanelandFireRating2FD60', 'DecorativeGroves','DecorativeGrovesLeaf2', 'DoorsetTypeSD','DoorsetTypeSD2','DoorsetTypeDD','DoorsetTypeDD2','OverpanelFanlight','OverpanelFanlightGlazing','SideLight','SideLight2', 'SideLightGlazing','SideLight2Glazing', 'MachiningOfDoorFrame', 'FittingOfIntumescentToFrame','FittingOfIntumescentToFrameFD60', 'HingeAssembley','HingeAssembleyLeafandHalfDD','LocksetAssembley','PlotLabelDoorsets','FrameAssembley','PalletPackaging','DoorLeafProtectionPlasticSleeve','DoorLeafProtectionPlasticSleeveFD60','LeafSizing','LeafLiping','LeafCalibration','PaintPrep','LabourProcessForScallopedFrame', 'LabourAssemblyFor4SidedFrame','MachiningOfScreenframe','MachiningOfGlazingBead','MachiningOfTransom','MachiningOfSubFrame','CuttingOfScreenframe','CuttingOfGlazingBead','CuttingOfTransom','CuttingOfSubFrame','ScreenAssembley','TransomAssembley','SubFrameAssembley','FittingOfGlass','FittingOfGlazingSystem','FittingOfGlazingBead','SprayFinishOfScreenframe','SprayFinishGlazingBead','SprayFinishOfTransom','SprayFinishOfSubFrame','PallettingPackaging','LoadingOfLorry','labour_cost_per_man[]','labour_cost_per_machine[]','type[]'];
         for(i = 0; i < checkId.length; i++){
             if($('#' + checkId[i]).is(":checked")){
                 $('#' + checkId[i]).val('1');
