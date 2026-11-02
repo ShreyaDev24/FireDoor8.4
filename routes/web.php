@@ -436,6 +436,7 @@ Route::middleware('auth')->group(function () {
 
 
 Route::prefix('quotation')->group(function (): void {
+    Route::get('/check-pdf-memory', [App\Http\Controllers\DoorScheduleController::class,'checkPdfMemory']);
     Route::get('/add', [App\Http\Controllers\DoorScheduleController::class,'add'])->name('quotation/add');
     Route::post('/store', [App\Http\Controllers\DoorScheduleController::class,'store'])->name('quotation/store');
     Route::get('/list', [App\Http\Controllers\DoorScheduleController::class,'quotationList'])->name('quotation/list');

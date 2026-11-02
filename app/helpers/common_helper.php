@@ -3080,6 +3080,36 @@ function commonGeneralLabourCost($request,$userIds): void{
                     SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
 
+                if ($request->doorLeafFinish == "Primed" && $GeneralLabourCost->DoorLeafFinishHalfPrimed == 1) {
+                    $data = getMyLaborCost('DoorLeafFinishHalfPrimed', $GeneralLabourCost->genLaborCost);
+
+                    $description = "Half Prime of door slab |"
+                        .($GeneralLabourCost->DoorLeafFinishHalfPrimedManMinutes / 60)."|"
+                        .$data->labour_cost_per_man."|"
+                        .($GeneralLabourCost->DoorLeafFinishHalfPrimedMachineMinutes / 60)."|"
+                        .$data->labour_cost_per_machine;
+
+                    $unit_cost = ($GeneralLabourCost->DoorLeafFinishHalfPrimedManMinutes * ($data->labour_cost_per_man / 60))
+                        + ($GeneralLabourCost->DoorLeafFinishHalfPrimedMachineMinutes * ($data->labour_cost_per_machine / 60));
+
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
+                }
+
+                if ($request->doorLeafFinish == "Primed" && $GeneralLabourCost->DoorLeafFinishTouchUpPrimed == 1) {
+                    $data = getMyLaborCost('DoorLeafFinishTouchUpPrimed', $GeneralLabourCost->genLaborCost);
+
+                    $description = "Touch up Prime of door slab |"
+                        .($GeneralLabourCost->DoorLeafFinishTouchUpPrimedManMinutes / 60)."|"
+                        .$data->labour_cost_per_man."|"
+                        .($GeneralLabourCost->DoorLeafFinishTouchUpPrimedMachineMinutes / 60)."|"
+                        .$data->labour_cost_per_machine;
+
+                    $unit_cost = ($GeneralLabourCost->DoorLeafFinishTouchUpPrimedManMinutes * ($data->labour_cost_per_man / 60))
+                        + ($GeneralLabourCost->DoorLeafFinishTouchUpPrimedMachineMinutes * ($data->labour_cost_per_machine / 60));
+
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
+                }
+
                 if (($request->doorLeafFinish == "Paint_Finish" || $request->doorLeafFinish == "Painted") && $GeneralLabourCost->DoorLeafFinishPainted == 1) {
                     $data = getMyLaborCost('DoorLeafFinishPainted', $GeneralLabourCost->genLaborCost);
                     $description = "Paint of door slab |".($GeneralLabourCost->DoorLeafFinishPaintedManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafFinishPaintedMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
@@ -3111,6 +3141,36 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $data = getMyLaborCost('FrameFinishPrimed', $GeneralLabourCost->genLaborCost);
                     $description = "Priming of door frame |".($GeneralLabourCost->FrameFinishPrimedManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->FrameFinishPrimedMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->FrameFinishPrimedManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->	FrameFinishPrimedMachineMinutes * ($data->labour_cost_per_machine/ 60));
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
+                }
+
+                if ($request->frameFinish == "Primed_Only" && $GeneralLabourCost->FrameFinishHalfPrimed == 1) {
+                    $data = getMyLaborCost('FrameFinishHalfPrimed', $GeneralLabourCost->genLaborCost);
+
+                    $description = "Half Prime of door frame |"
+                        .($GeneralLabourCost->FrameFinishHalfPrimedManMinutes / 60)."|"
+                        .$data->labour_cost_per_man."|"
+                        .($GeneralLabourCost->FrameFinishHalfPrimedMachineMinutes / 60)."|"
+                        .$data->labour_cost_per_machine;
+
+                    $unit_cost = ($GeneralLabourCost->FrameFinishHalfPrimedManMinutes * ($data->labour_cost_per_man / 60))
+                        + ($GeneralLabourCost->FrameFinishHalfPrimedMachineMinutes * ($data->labour_cost_per_machine / 60));
+
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
+                }
+
+                if ($request->frameFinish == "Primed_Only" && $GeneralLabourCost->FrameFinishTouchUpPrimed == 1) {
+                    $data = getMyLaborCost('FrameFinishTouchUpPrimed', $GeneralLabourCost->genLaborCost);
+
+                    $description = "Touch up Prime of door frame |"
+                        .($GeneralLabourCost->FrameFinishTouchUpPrimedManMinutes / 60)."|"
+                        .$data->labour_cost_per_man."|"
+                        .($GeneralLabourCost->FrameFinishTouchUpPrimedMachineMinutes / 60)."|"
+                        .$data->labour_cost_per_machine;
+
+                    $unit_cost = ($GeneralLabourCost->FrameFinishTouchUpPrimedManMinutes * ($data->labour_cost_per_man / 60))
+                        + ($GeneralLabourCost->FrameFinishTouchUpPrimedMachineMinutes * ($data->labour_cost_per_machine / 60));
+
                     SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
 

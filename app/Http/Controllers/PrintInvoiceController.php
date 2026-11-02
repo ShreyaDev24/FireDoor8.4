@@ -57,6 +57,39 @@ class PrintInvoiceController extends Controller
         $this->middleware('auth')->except(['printinvoiceclient','signaturesubmit']);
     }
 
+    /**
+     * Render big HTML in chunks so DomPDF never holds the whole document in memory,
+     * then merge the chunks into one file at $targetPath.
+     * $renderChunk receives one chunk's HTML and returns a DomPDF instance.
+     */
+    private function renderPdfInChunks(array $chunks, string $targetPath, callable $renderChunk): void
+    {
+        $tmpFiles = [];
+        foreach (array_values($chunks) as $n => $html) {
+            $tmp = $targetPath . '.part' . $n . '.pdf';
+            $pdf = $renderChunk($html);
+            $pdf->save($tmp);
+            $tmpFiles[] = $tmp;
+            unset($pdf);
+            gc_collect_cycles();
+        }
+
+        if (count($tmpFiles) === 1) {
+            rename($tmpFiles[0], $targetPath);
+            return;
+        }
+
+        $merger = PDFMerger::init();
+        foreach ($tmpFiles as $f) {
+            $merger->addPDF($f, 'all');
+        }
+        $merger->merge();
+        $merger->save($targetPath);
+        foreach ($tmpFiles as $f) {
+            unlink($f);
+        }
+    }
+
     public function printinvoice($quatationId, $versionID, $isActive = null , $userid = null,$clientclick=null): mixed
     {
         ini_set('max_execution_time', 0);
@@ -481,8 +514,6 @@ class PrintInvoiceController extends Controller
             // $IronmongaryPrice += $show->IronmongaryPrice;
 
 
-            $grand_total = BOMDetails::where('itemId', $show->itemId)->sum('grand_total');
-            $labour_total = BOMDetails::where('itemId', $show->itemId)->sum('labour_total');
             $basePrice = floatval($show->DoorsetPrice);
             $leafDelta = floatval($show->leaf_price_delta ?? 0);
 
@@ -947,6 +978,8 @@ class PrintInvoiceController extends Controller
             }
 
             $i++;
+            $aRows[] = $a;
+            $a = '';
             //     }
             // }
         }
@@ -3642,10 +3675,15 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
         // return $elevTbl;
         // return view('Company.pdf_files.elevationDrawing', compact('elevTbl'));
-        $pdf6 = PDF::loadView('Company.pdf_files.elevationDrawing', ['elevTbl' => $elevTbl]);
         $path6 = public_path() . '/allpdfFile';
         $fileName6 = $id . '6' . '.' . 'pdf';
-        $pdf6->save($path6 . '/' . $fileName6);
+        $elevSep = '<div class="page-break"></div>';
+        $elevParts = array_values(array_filter(explode($elevSep, $elevTbl), fn($p) => trim($p) !== ''));
+        $elevChunks = array_map(fn($g) => implode($elevSep, $g), array_chunk($elevParts, 10));
+        if (empty($elevChunks)) {
+            $elevChunks = [$elevTbl];
+        }
+        $this->renderPdfInChunks($elevChunks, $path6 . '/' . $fileName6, fn($html) => PDF::loadView('Company.pdf_files.elevationDrawing', ['elevTbl' => $html]));
         // back page design
 
 
@@ -4078,7 +4116,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             $mergedFilePath = public_path() . '/allpdfFile/' . $quotaion->QuotationGenerationId . '_' . $version . '.pdf';
             $pdfMerger->merge();
             $pdfMerger->save($mergedFilePath);
-            $pdfMerger->save(public_path().'/quotationFiles'.'/'.$quotaion->QuotationGenerationId.'_'.$version.'.pdf');
+            copy($mergedFilePath, public_path().'/quotationFiles'.'/'.$quotaion->QuotationGenerationId.'_'.$version.'.pdf');
 
             $quo = Quotation::find($quatationId);
             $quo->quotTag = 1;
