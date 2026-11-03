@@ -2543,8 +2543,13 @@ function discountQuote($quotationId,$versionId): bool{
     if(!empty($NonConfigurableItemStore)){
         foreach($NonConfigurableItemStore as $val){
             $NonConfigurableItems = NonConfigurableItems::where('id',$val->nonConfigurableId)->first();
-            $QuoteSummaryDiscountValue = ($NonConfigurableItems->price * $margin) / 100;
-            $price = ($margin > 0)? ($NonConfigurableItems->price + $QuoteSummaryDiscountValue): ($NonConfigurableItems->price - $QuoteSummaryDiscountValue);
+            $originalPrice = $NonConfigurableItems->price;
+
+            $price = $originalPrice * (1 + ($margin / 100));
+
+            $price = ($price >= 0)
+                ? floor($price * 100) / 100
+                : ceil($price * 100) / 100;
             NonConfigurableItemStore::where('id', $val->id)->update([
                 // 'price' => $price,
                 // 'total_price' => $price,
