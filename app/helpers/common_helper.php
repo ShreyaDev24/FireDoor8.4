@@ -2633,7 +2633,7 @@ function SaveBOMCalculation($userIds, $request, $category, $frame_unit, string $
     }
 
     if($quantity_of_door_type == ''){
-        if($request->doorsetType == 'DD'){
+        if($request->doorsetType == 'DD' || $request->doorsetType == 'leaf_and_a_half'){
             $quantity_of_door_type = 2 * $ItemMaster;
             $qtyOfD = 2;
         }elseif($request->doorsetType == 'SD'){
@@ -2657,7 +2657,7 @@ function SaveBOMCalculation($userIds, $request, $category, $frame_unit, string $
         break;
 
         case "LeafSetBesPoke":
-            if($request->doorsetType == 'DD'){
+            if($request->doorsetType == 'DD' || $request->doorsetType == 'leaf_and_a_half'){
                 $quantity_of_door_type = 2 * $ItemMaster;
                 $qtyOfD = 2 * $ItemMaster;
             }else{
