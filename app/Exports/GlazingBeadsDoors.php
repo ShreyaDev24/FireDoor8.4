@@ -211,8 +211,8 @@ class GlazingBeadsDoors extends DefaultValueBinder implements FromCollection,Wit
                     $value->SL1GlazingBeadSpeciesName,
                     str_replace('_', ' ', $value->BeadingType),
                     str_replace('_', ' ', $value->DoorLeafFinish),
-                    $value->SideLight1GlazingSystemsThickness,
                     $value->SlBeadHeight,
+                    $value->SlBeadThickness,
                     // VP Width = SL Width - (Frame Thickness x 2) + MS
                     in_array($value->FireRating, ['FD60s', 'FD60'])
                         ? (($value->SL1Width - ($value->SideLight1FrameThickness * 2)) + $VisionPanelWidthFD60)
@@ -260,8 +260,8 @@ class GlazingBeadsDoors extends DefaultValueBinder implements FromCollection,Wit
                     $value->SideLight2GlazingBeadSpeciesName,
                     str_replace('_', ' ', $value->SideLight2BeadingType),
                     str_replace('_', ' ', $value->DoorLeafFinish),
-                    $value->SideLight2GlazingSystemsThickness,
-                    $value->SlBeadHeight,
+                    $value->Sl2BeadHeight,
+                    $value->Sl2BeadThickness,
                     in_array($value->FireRating, ['FD60s', 'FD60'])
                         ? (($value->SL2Width - ($value->SideLight2FrameThickness * 2)) + $VisionPanelWidthFD60)
                         : (($value->SL2Width - ($value->SideLight2FrameThickness * 2)) + $VisionPanelWidthNFR),
