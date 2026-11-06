@@ -151,6 +151,23 @@
                     </div>
                     <div class="col-md-6">
                         <div class="position-relative form-group">
+                            <label for="distanceFromTopOfDoor">Distance from Bottom of door
+                            @if(!empty($tooltip->distanceFromBottomOfDoor))
+                            <script type="text/javascript">
+                            document.write(Tooltip('{{$tooltip->distanceFromBottomOfDoor}}'));
+                            </script>
+                            @endif
+                                </label>
+                            <input type="number"
+                                @if(!isset($Item['DistanceFromBottomOfDoor'])) {{'readonly'}} @endif
+                                min="450"
+                                name="distanceFromBottomOfDoor" id="distanceFromBottomOfDoor"
+                                class="form-control door-configuration"
+                        value="@if(isset($Item['DistanceFromBottomOfDoor'])){{$Item['DistanceFromBottomOfDoor']}}@endif">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
                             <label for="distanceBetweenVPs">Distance between VP's
                             @if(!empty($tooltip->distanceBetweenVPs))
                             <script type="text/javascript">

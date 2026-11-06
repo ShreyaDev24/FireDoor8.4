@@ -453,6 +453,7 @@ function pageIdentity(){
             $("#vP1Height1").attr('readonly',true);
             $("#vP1Width").attr('required',true);
             $("#vP1Height1").attr('required',true);
+            $("#distanceFromBottomOfDoor").attr('readonly',false);
             $("#distanceFromTopOfDoor").attr('readonly',false);
             $("#distanceFromTheEdgeOfDoor").attr({'required':true,'readonly':false});
             $('#glazingSystems').attr('required',true);
@@ -473,6 +474,7 @@ function pageIdentity(){
             $("#AreVPsEqualSizes").val('').attr({'disabled':true});
             $("#vP1Width").val('').attr({'required':false,'readonly':true});
             $("#vP1Height1").val('').attr({'required':false,'readonly':true});
+            $("#distanceFromBottomOfDoor").attr('readonly',true);
             $("#distanceFromTopOfDoor").val('').attr({'readonly':true , 'required':false});
             $("#distanceFromTheEdgeOfDoor").val('').attr({'readonly':true , 'required':false});
             $("#distanceBetweenVPs").val('').attr({'required':false,'readonly':true});

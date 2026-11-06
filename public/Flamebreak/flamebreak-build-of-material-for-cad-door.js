@@ -81,6 +81,8 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     getmsginput = 'Standard width is not more than ' + getmaxinputvalue + '.';
                 } else if (id == 'standardHeight') {
                     getmsginput = 'Standard height is not more than ' + getmaxinputvalue + '.';
+                } else if (id == 'distanceFromBottomOfDoor') {
+                    getmsginput = 'The minimum distance from the bottom of the door is ' + getmininputvalue + 'mm';
                 } else if (id == 'distanceFromTopOfDoor') {
                     getmsginput = 'The minimum distance from the top of the door is ' + getmininputvalue + '.';
                 } else if (id == 'distanceFromTheEdgeOfDoor') {
