@@ -176,7 +176,7 @@
                             @endif
                             </label>
                             <input type="number"
-                                min="{{ $isQmarkORCertifireEnabled ? 100 : 80 }}"
+                                min="{{ $isQmarkORCertifireEnabled ? 100 : 200 }}"
                                 @if(!isset($Item['DistanceBetweenVPs'])) {{'readonly'}} @endif
                                 name="distanceBetweenVPs"
                                 id="distanceBetweenVPs" class="form-control door-configuration"
