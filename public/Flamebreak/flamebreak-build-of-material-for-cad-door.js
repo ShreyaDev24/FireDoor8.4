@@ -86,7 +86,7 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                 } else if (id == 'distanceFromTheEdgeOfDoor') {
                     getmsginput = 'The minimum distance from the edge of the door is ' + getmininputvalue + '.';
                 } else if (id == 'distanceBetweenVPs') {
-                    getmsginput = 'The minimum distance between the VP’s is 80mm';
+                    getmsginput = 'The minimum distance between the VP’s is 200 mm';
                 } else if (id == 'SL1Width') {
                     getmsginput = 'SL1 Width should not be more than ' + getmaxinputvalue + '.';
                 } else if (id == 'SL2Width') {

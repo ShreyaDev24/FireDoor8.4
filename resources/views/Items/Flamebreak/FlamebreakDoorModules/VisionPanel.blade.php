@@ -159,7 +159,7 @@
                             @endif
                             </label>
                             <input type="number"
-                                min="80"
+                                min="200"
                                 @if(!isset($Item['DistanceBetweenVPs'])) {{'readonly'}} @endif
                                 name="distanceBetweenVPs"
                                 id="distanceBetweenVPs" class="form-control door-configuration"
