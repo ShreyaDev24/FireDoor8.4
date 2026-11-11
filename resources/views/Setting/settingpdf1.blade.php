@@ -9,6 +9,11 @@
     .cke_contents{
         height: 29.7cm !important;
     }
+
+    .cke_notification,
+    .cke_notification_warning {
+        display: none !important;
+    }
 </style>
 <div class="app-main__outer">
     <div class="app-main__inner">
