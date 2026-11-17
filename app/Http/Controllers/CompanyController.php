@@ -39,6 +39,33 @@ use App\Models\SettingPDFfooter;
 use App\Models\SettingBOMCost;
 use App\Models\ShippingAddress;
 use App\Models\User;
+use App\Models\Option;
+use App\Models\GlassType;
+use App\Models\LeafType;
+use App\Models\SelectedLeafType;
+use App\Models\Color;
+use App\Models\DoorDimension;
+use App\Models\IntumescentSealLeafType;
+use App\Models\SettingIntumescentSeals2;
+use App\Models\LippingSpecies;
+use App\Models\LippingSpeciesItems;
+use App\Models\SelectedLippingSpecies;
+use App\Models\SelectedLippingSpeciesItems;
+use App\Models\SelectedDoordimension;
+use App\Models\SelectedGlassType;
+use App\Models\SelectedGlazingSystem;
+use App\Models\GlazingSystem;
+use App\Models\GlassGlazingSystem;
+use App\Models\IntumescentSealColor;
+use App\Models\SelectedIntumescentSealColor;
+use App\Models\Accoustics;
+use App\Models\SelectedAccoustics;
+use App\Models\DoorLeafFacing;
+use App\Models\SelectedDoorLeafFacing;
+use App\Models\SelectedArchitraveType;
+use App\Models\ArchitraveType;
+use App\Models\{ScreenGlassType, ScreenGlazingType, OverpanelGlassGlazing,SelectedOverpanelGlassGlazing, SelectedScreenGlass, SelectedScreenGlazing};
+
 
 use App\Models\ArchtectureItemForms;
 
@@ -311,6 +338,7 @@ class CompanyController extends Controller
 
             $user->save();
 
+            $userId = $user->id;
             $userid = User::find($user->id);
             $userid->parent_id = $user->id;
             $userid->save();
@@ -527,6 +555,26 @@ class CompanyController extends Controller
                 $p4->created_at = date('Y-m-d H:i:s');
                 $p4->updated_at = date('Y-m-d H:i:s');
                 $p4->save();
+
+
+                if ($request->input('selectSelectedOptionAll') == 1) {
+
+                    $LeafType = LeafType::where('EditBy', 1)->get();
+
+                    foreach ($LeafType as $key) {
+
+                        if (!empty($key->id)) {
+
+                            SelectedLeafType::firstOrCreate(
+                                [
+                                    'leaf_id' => $key->id,
+                                    'editBy' => $userId
+                                ]
+                            );
+
+                        }
+                    }
+                }
 
             }
 
