@@ -66,10 +66,10 @@ class GeneralLabourCosts implements FromCollection,WithHeadings,WithEvents,WithT
                     $j,
                     $doortype,
                     $words1,
-                    $words2,
-                    $words3,
-                    $words4,
-                    $words5,
+                    round($words2, 2),
+                    round($words3, 2),
+                    round($words4, 2),
+                    round($words5, 2),
                     $LMPerDoorType,
                     $Unit,
                     $UnitCost,
@@ -90,7 +90,7 @@ class GeneralLabourCosts implements FromCollection,WithHeadings,WithEvents,WithT
 
         return collect($allData);
     }
-    
+
     public function headings(): array
     {
         $a = [
@@ -118,7 +118,7 @@ class GeneralLabourCosts implements FromCollection,WithHeadings,WithEvents,WithT
         $d = [$b,$a];
         return $d;
     }
-    
+
     public function registerEvents(): array
     {
 
@@ -172,7 +172,7 @@ class GeneralLabourCosts implements FromCollection,WithHeadings,WithEvents,WithT
     {
         return 'General Labour Costs';
     }
-    
+
     public function columnFormats(): array
     {
         $currencyFormats = [
