@@ -24,7 +24,7 @@
 
             {{-- DF Rating --}}
             <div class="col-md-6 mb-3">
-                <label>DF Rating <span class="text-danger">*</span></label>
+                <label>DB Rating <span class="text-danger">*</span></label>
                 <input type="text"
                     name="DFRating"
                     class="form-control @error('DFRating') is-invalid @enderror"

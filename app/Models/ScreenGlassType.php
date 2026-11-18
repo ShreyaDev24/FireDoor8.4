@@ -12,7 +12,7 @@ class ScreenGlassType extends Model
         'FireRating',
         'GlassIntegrity',
         'GlassType',
-        'DFRating',
+        'DBRating',
         'HeightPoint1',
         'HeightPoint2',
         'WidthPoint1',

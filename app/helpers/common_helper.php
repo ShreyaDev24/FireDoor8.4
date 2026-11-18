@@ -8341,7 +8341,7 @@ function SideScreen_Glass_Type($authdata,string $optionType,$UserId): string{
                     <tr class="text-white">
                         '.$check.'
                         <th>Fire Rating</th>
-                        <th>DFRating</th>
+                        <th>DBRating</th>
                         <th>Glass Name</th>
                         <th>Width Point 1 (far right)</th>
                         <th>Height Point 1 (Lowest)</th>
