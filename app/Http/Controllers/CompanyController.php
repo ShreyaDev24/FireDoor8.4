@@ -39,6 +39,34 @@ use App\Models\SettingPDFfooter;
 use App\Models\SettingBOMCost;
 use App\Models\ShippingAddress;
 use App\Models\User;
+use App\Models\Option;
+use App\Models\GlassType;
+use App\Models\LeafType;
+use App\Models\SelectedLeafType;
+use App\Models\Color;
+use App\Models\DoorDimension;
+use App\Models\IntumescentSealLeafType;
+use App\Models\SettingIntumescentSeals2;
+use App\Models\SelectedIntumescentSeals2;
+use App\Models\LippingSpecies;
+use App\Models\LippingSpeciesItems;
+use App\Models\SelectedLippingSpecies;
+use App\Models\SelectedLippingSpeciesItems;
+use App\Models\SelectedDoordimension;
+use App\Models\SelectedGlassType;
+use App\Models\SelectedGlazingSystem;
+use App\Models\GlazingSystem;
+use App\Models\GlassGlazingSystem;
+use App\Models\IntumescentSealColor;
+use App\Models\SelectedIntumescentSealColor;
+use App\Models\Accoustics;
+use App\Models\SelectedAccoustics;
+use App\Models\DoorLeafFacing;
+use App\Models\SelectedDoorLeafFacing;
+use App\Models\SelectedArchitraveType;
+use App\Models\ArchitraveType;
+use App\Models\{ScreenGlassType, ScreenGlazingType, OverpanelGlassGlazing,SelectedOverpanelGlassGlazing, SelectedScreenGlass, SelectedScreenGlazing};
+
 
 use App\Models\ArchtectureItemForms;
 
@@ -340,6 +368,7 @@ class CompanyController extends Controller
 
             $user->save();
 
+            $userId = $user->id;
             $userid = User::find($user->id);
             $userid->parent_id = $user->id;
             $userid->save();
@@ -556,6 +585,11 @@ class CompanyController extends Controller
                 $p4->created_at = date('Y-m-d H:i:s');
                 $p4->updated_at = date('Y-m-d H:i:s');
                 $p4->save();
+
+
+                if ($request->input('selectSelectedOptionAll') == 1) {
+                    $this->copyDefaultSelectedOptions($userId);
+                }
 
             }
 
@@ -1018,6 +1052,185 @@ class CompanyController extends Controller
 
         $request->session()->flash($flash, 'data');
         return redirect()->route('company/profile');
+    }
+
+    /**
+     * Copy EditBy = 1 master rows into each selected-option table for a new company user.
+     * Lookup keys are the real foreign key plus the selected table's user column, so repeats are skipped.
+     */
+    private function copyDefaultSelectedOptions(int $userId): void
+    {
+        $number = function ($value) {
+            return is_numeric($value) ? $value : 0;
+        };
+
+        DB::transaction(function () use ($userId, $number) {
+            $modules = [
+                [Accoustics::class, 'EditBy', SelectedAccoustics::class, 'accousticsId', 'userId', 'selectedPrice'],
+                [ArchitraveType::class, 'EditBy', SelectedArchitraveType::class, 'architraveTypeId', 'userId', 'selectedPrice'],
+                [DoorLeafFacing::class, 'editBy', SelectedDoorLeafFacing::class, 'doorLeafFacingId', 'userId', 'selectedPrice'],
+                [GlassType::class, 'EditBy', SelectedGlassType::class, 'glass_id', 'editBy', 'selectedPrice'],
+                [GlazingSystem::class, 'editBy', SelectedGlazingSystem::class, 'glazingId', 'userId', 'selectedPrice'],
+                [IntumescentSealColor::class, 'editBy', SelectedIntumescentSealColor::class, 'intumescentSealColorId', 'userId', 'selectedPrice'],
+                [LeafType::class, 'EditBy', SelectedLeafType::class, 'leaf_id', 'editBy', 'selectedPrice'],
+                [ScreenGlassType::class, 'EditBy', SelectedScreenGlass::class, 'glass_id', 'editBy', 'glassSelectedPrice'],
+                [ScreenGlazingType::class, 'EditBy', SelectedScreenGlazing::class, 'glazing_id', 'editBy', 'glazingSelectedPrice'],
+            ];
+
+            foreach ($modules as [$master, $ownerColumn, $selected, $foreignKey, $userColumn, $priceColumn]) {
+                foreach ($master::where($ownerColumn, 1)->pluck('id') as $id) {
+                    if (empty($id)) {
+                        continue;
+                    }
+
+                    $selected::firstOrCreate(
+                        [
+                            $foreignKey => $id,
+                            $userColumn => $userId,
+                        ],
+                        [
+                            $priceColumn => 0,
+                        ]
+                    );
+                }
+            }
+
+            OverpanelGlassGlazing::where('EditBy', 1)->pluck('id')->each(function ($id) use ($userId) {
+                if (empty($id)) {
+                    return;
+                }
+
+                SelectedOverpanelGlassGlazing::firstOrCreate(
+                    [
+                        'glass_glazing_id' => $id,
+                        'editBy' => $userId,
+                    ],
+                    [
+                        'glassSelectedPrice' => 0,
+                        'glazingSelectedPrice' => 0,
+                    ]
+                );
+            });
+
+            Color::where('editBy', 1)->get(['id', 'DoorLeafFacing', 'ColorCost'])->each(function ($color) use ($userId, $number) {
+                if (empty($color->id)) {
+                    return;
+                }
+
+                SelectedColor::firstOrCreate(
+                    [
+                        'SelectedColorId' => $color->id,
+                        'SelectedUserId' => $userId,
+                    ],
+                    [
+                        'DoorLeafFacingName' => $color->DoorLeafFacing,
+                        'SelectedPrice' => $number($color->ColorCost),
+                    ]
+                );
+            });
+
+            DoorDimension::where('editBy', 1)->get()->each(function ($door) use ($userId, $number) {
+                if (empty($door->id)) {
+                    return;
+                }
+
+                SelectedDoordimension::firstOrCreate(
+                    [
+                        'doordimension_id' => $door->id,
+                        'doordimension_user_id' => $userId,
+                    ],
+                    [
+                        'selected_configurableitems' => $door->configurableitems,
+                        'selected_firerating' => $door->fire_rating,
+                        'selected_code' => $door->code,
+                        'selected_mm_height' => $number($door->mm_height),
+                        'selected_mm_width' => $number($door->mm_width),
+                        'selected_sellingprice' => $number($door->selling_price),
+                        'selected_cost' => $number($door->cost_price),
+                    ]
+                );
+            });
+
+            Option::where('editBy', 1)
+                ->where('is_deleted', 0)
+                ->whereIn('OptionSlug', ['Architrave_Finish', 'Frame_Finish', 'Door_Leaf_Facing', 'door_leaf_finish'])
+                ->where('configurableitems', '!=', 3)
+                ->get()
+                ->each(function ($option) use ($userId, $number) {
+                    if (empty($option->id)) {
+                        return;
+                    }
+
+                    SelectedOption::firstOrCreate(
+                        [
+                            'optionId' => $option->id,
+                            'SelectedUserId' => $userId,
+                        ],
+                        [
+                            'configurableitems' => $option->configurableitems,
+                            'tag' => $option->OptionSlug,
+                            'SelectedUnderAttribute' => $option->UnderAttribute,
+                            'SelectedOptionKey' => $option->OptionKey,
+                            'SelectedOptionValue' => $option->OptionValue,
+                            'SelectedOptionSlug' => $option->OptionSlug,
+                            'SelectedOptionCost' => $number($option->OptionCost),
+                        ]
+                    );
+                });
+
+            SettingIntumescentSeals2::where('editBy', 1)->get()->each(function ($seal) use ($userId) {
+                if (empty($seal->id)) {
+                    return;
+                }
+
+                SelectedIntumescentSeals2::firstOrCreate(
+                    [
+                        'intumescentseals2_id' => $seal->id,
+                        'selected_intumescentseals2_user_id' => $userId,
+                    ],
+                    [
+                        'selected_configurableitems' => $seal->configurableitems,
+                        'selected_doorname' => $seal->doorname,
+                        'selected_firerating' => $seal->firerating,
+                        'selected_tag' => $seal->tag,
+                        'selected_configuration' => $seal->configuration,
+                        'selected_intumescentSeals' => $seal->intumescentSeals,
+                        'selected_brand' => $seal->brand,
+                        'selected_firetested' => $seal->firetested,
+                        'selected_Point1height' => $seal->Point1height,
+                        'selected_Point1width' => $seal->Point1width,
+                        'selected_Point2height' => $seal->Point2height,
+                        'selected_Point2width' => $seal->Point2width,
+                        'MeetingEdges' => $seal->MeetingEdges,
+                        'selected_cost' => 0,
+                    ]
+                );
+            });
+
+            LippingSpeciesItems::query()
+                ->whereHas('lipping_species', function ($query) {
+                    $query->where('editBy', 1)->where('Status', 1);
+                })
+                ->get(['id', 'lipping_species_id', 'thickness', 'price', 'status'])
+                ->each(function ($item) use ($userId, $number) {
+                    if (empty($item->id)) {
+                        return;
+                    }
+
+                    SelectedLippingSpeciesItems::firstOrCreate(
+                        [
+                            'selected_lipping_species_items_id' => $item->id,
+                            'selected_user_id' => $userId,
+                        ],
+                        [
+                            'selected_lipping_species_id' => $item->lipping_species_id,
+                            'selected_thickness' => $number($item->thickness),
+                            'selected_status' => $item->status,
+                            'selected_price' => $number($item->price),
+                        ]
+                    );
+                });
+        });
     }
 
 }

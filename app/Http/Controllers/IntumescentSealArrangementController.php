@@ -453,6 +453,7 @@ class IntumescentSealArrangementController extends Controller
         }
 
         $row = 2;
+        $exportRecordIds = [];
 
         foreach ($items as $item) {
 
@@ -468,6 +469,7 @@ class IntumescentSealArrangementController extends Controller
             $sheet->setCellValue('J'.$row, $item->FireOnly);
             $sheet->setCellValue('K'.$row, $item->leaf_type_keys);
             $sheet->setCellValue('L'.$row, number_format($item->selected_cost ?? 0, 2));
+            $exportRecordIds[] = $item->id;
 
             $row++;
         }
@@ -480,6 +482,7 @@ class IntumescentSealArrangementController extends Controller
             ->getAllBorders()
             ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
+        \App\Support\SelectedOptionExportColumns::append($sheet, $exportRecordIds, 'intumescent_seal_arrangement');
         $writer = new Xlsx($spreadsheet);
         $filename = 'Intumescent_Seal_Arrangement_selected_'.now()->format('Ymd_His').'.xlsx';
 

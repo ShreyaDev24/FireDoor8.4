@@ -88,7 +88,7 @@
             <h3>Quotation : - {{$quotation->QuotationGenerationId}}</h3>
             <p>Please see the Quotation file.</p>
 
-            <p><a class="pdf_generate" href="{{url('/')}}/public/allpdfFile/{{$filename}}" target="_blanks">PDF File</a></p>
+            <p><a class="pdf_generate" href="{{url('/')}}/public/allpdfFile/{{$filename}}?v={{ @filemtime(public_path('allpdfFile/'.$pdf_file_name)) ?: time() }}" target="_blanks">PDF File</a></p>
 
             @if($quotation->linkStatus == 0)
                 <a href="#" class="btn btn-default btn-lg acceptQuot">

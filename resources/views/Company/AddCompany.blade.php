@@ -272,6 +272,17 @@
                                                         <input name="UserJobtitle" value="@if(isset($editdata->id)){{$editdata->UserJobtitle}}@else{{old('UserJobtitle')}}@endif" required placeholder="Enter Job Title" type="text" class="form-control">
                                                     </div>
                                                 </div>
+                                                @if(!isset($editdata->id))
+                                                <div class="form-group">
+                                                    <label>
+                                                        <input type="checkbox"
+                                                            name="selectSelectedOptionAll"
+                                                            id="selectSelectedOptionAll"
+                                                            value="1">
+                                                        Select All Default Selected Options
+                                                    </label>
+                                                </div>
+                                                @endif
                                                 @if(isset($editdata->id))
                                                 <div class="col-md-6">
                                                     <div class="position-relative form-group">

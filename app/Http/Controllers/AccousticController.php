@@ -295,6 +295,7 @@ class AccousticController extends Controller
             $sheet->getColumnDimension('J')->setWidth(18);
 
             $row = 2;
+            $exportRecordIds = [];
 
             foreach ($items as $item) {
 
@@ -308,6 +309,7 @@ class AccousticController extends Controller
                 $sheet->setCellValue('H'.$row, $item->Deanta ? 'Yes' : 'No');
                 $sheet->setCellValue('I'.$row, $item->MMM ? 'Yes' : 'No');
                 $sheet->setCellValue('J'.$row, number_format($item->selectedPrice ?? 0, 2));
+                $exportRecordIds[] = $item->id;
 
                 $row++;
             }
@@ -320,6 +322,7 @@ class AccousticController extends Controller
                 ->getAllBorders()
                 ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
+            \App\Support\SelectedOptionExportColumns::append($sheet, $exportRecordIds, 'acoustics');
             $writer = new Xlsx($spreadsheet);
 
             $filename = 'accoustics_selected_' . now()->format('Ymd_His') . '.xlsx';

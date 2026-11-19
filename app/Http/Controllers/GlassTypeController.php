@@ -283,6 +283,7 @@ class GlassTypeController extends Controller
         }
 
         $row = 2;
+        $exportRecordIds = [];
 
         foreach ($items as $item) {
 
@@ -302,6 +303,7 @@ class GlassTypeController extends Controller
             $sheet->setCellValue('N'.$row, $item->GlassThickness);
             $sheet->setCellValue('O'.$row, $item->VpAreaSize);
             $sheet->setCellValue('P'.$row, number_format($item->selectedPrice ?? 0, 2));
+            $exportRecordIds[] = $item->id;
 
             $row++;
         }
@@ -314,6 +316,7 @@ class GlassTypeController extends Controller
             ->getAllBorders()
             ->setBorderStyle(Border::BORDER_THIN);
 
+        \App\Support\SelectedOptionExportColumns::append($sheet, $exportRecordIds, 'glass_type');
         $writer = new Xlsx($spreadsheet);
         $filename = 'Glass_Type_selected_' . now()->format('Ymd_His') . '.xlsx';
 

@@ -71,6 +71,7 @@
                 <button id="exportSelected" class="btn btn-info">
                     <i class="fa fa-download"></i> Export Selected
                 </button>
+                @include('SelectedOptions.partials.import_excel_button')
                 @endif
 
                 <a href="{{ url('setting/lipping-species') }}" class="btn btn-primary">
@@ -392,5 +393,7 @@ $(window).on('load', function () {
 });
 
 </script>
+
+@include('SelectedOptions.partials.import_excel_script', ['selectedImportModule' => 'timber_species'])
 
 @endsection

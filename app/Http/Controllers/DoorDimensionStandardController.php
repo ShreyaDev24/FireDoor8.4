@@ -260,6 +260,7 @@ class DoorDimensionStandardController extends Controller
             ->whereIn('door_dimension.configurableitems', [4,5,6,9])
             ->whereIn('door_dimension.editBy', [$auth->id, 1])
             ->select(
+                'door_dimension.id',
                 'door_dimension.code',
                 'door_dimension.mm_height',
                 'door_dimension.mm_width',
@@ -313,6 +314,7 @@ class DoorDimensionStandardController extends Controller
         $sheet->getColumnDimension('J')->setWidth(18);
 
         $row = 2;
+        $exportRecordIds = [];
 
         foreach ($items as $item) {
 
@@ -326,6 +328,7 @@ class DoorDimensionStandardController extends Controller
             $sheet->setCellValue('H'.$row, $item->door_leaf_facing);
             $sheet->setCellValue('I'.$row, configurationDoor($item->configurableitems));
             $sheet->setCellValue('J'.$row, number_format($item->selected_cost ?? 0, 2));
+            $exportRecordIds[] = $item->id;
 
             $row++;
         }
@@ -338,6 +341,7 @@ class DoorDimensionStandardController extends Controller
             ->getAllBorders()
             ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
+        \App\Support\SelectedOptionExportColumns::append($sheet, $exportRecordIds, 'door_dimension_standard');
         $writer = new Xlsx($spreadsheet);
         $filename = 'door_dimensions_selected_'.now()->format('Ymd_His').'.xlsx';
 

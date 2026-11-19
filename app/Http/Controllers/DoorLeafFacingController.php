@@ -318,6 +318,7 @@ class DoorLeafFacingController extends Controller
         $sheet->getColumnDimension('K')->setWidth(18);
 
         $row = 2;
+        $exportRecordIds = [];
 
         foreach ($items as $item) {
 
@@ -332,6 +333,7 @@ class DoorLeafFacingController extends Controller
             $sheet->setCellValue('I'.$row, $item->Deanta ? 'Yes' : 'No');
             $sheet->setCellValue('J'.$row, $item->MMM ? 'Yes' : 'No');
             $sheet->setCellValue('K'.$row, number_format($item->selectedPrice ?? 0, 2));
+            $exportRecordIds[] = $item->id;
 
             $row++;
         }
@@ -344,6 +346,7 @@ class DoorLeafFacingController extends Controller
             ->getAllBorders()
             ->setBorderStyle(Border::BORDER_THIN);
 
+        \App\Support\SelectedOptionExportColumns::append($sheet, $exportRecordIds, 'door_leaf_facing');
         $writer = new Xlsx($spreadsheet);
         $filename = 'Door_Leaf_Facing_selected_' . now()->format('Ymd_His') . '.xlsx';
 

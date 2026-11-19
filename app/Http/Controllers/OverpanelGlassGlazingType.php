@@ -319,6 +319,7 @@ class OverpanelGlassGlazingType extends Controller
             }
 
             $row = 2;
+            $exportRecordIds = [];
 
             foreach ($items as $item) {
 
@@ -348,6 +349,7 @@ class OverpanelGlassGlazingType extends Controller
                     number_format($item->glassSelectedPrice ?? 0,2),
                     number_format($item->glazingSelectedPrice ?? 0,2)
                 ], NULL, 'A'.$row);
+                $exportRecordIds[] = $item->id;
 
                 $row++;
             }
@@ -359,6 +361,7 @@ class OverpanelGlassGlazingType extends Controller
                 ->getAllBorders()
                 ->setBorderStyle(Border::BORDER_THIN);
 
+            \App\Support\SelectedOptionExportColumns::append($sheet, $exportRecordIds, 'side_light_fanlight');
             $writer = new Xlsx($spreadsheet);
             $filename = 'Glass_Glazing_System_selected_'.now()->format('Ymd_His').'.xlsx';
 

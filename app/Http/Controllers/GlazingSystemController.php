@@ -342,6 +342,7 @@ class GlazingSystemController extends Controller
         }
 
         $row = 2;
+        $exportRecordIds = [];
 
         foreach ($items as $item) {
 
@@ -361,6 +362,7 @@ class GlazingSystemController extends Controller
             $sheet->setCellValue('N'.$row, $item->GlazingBeadFixingDetail);
             $sheet->setCellValue('O'.$row, $item->VPAreaSize);
             $sheet->setCellValue('P'.$row, number_format($item->selectedPrice ?? 0, 2));
+            $exportRecordIds[] = $item->id;
 
             $row++;
         }
@@ -373,6 +375,7 @@ class GlazingSystemController extends Controller
             ->getAllBorders()
             ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
+        \App\Support\SelectedOptionExportColumns::append($sheet, $exportRecordIds, 'glazing_system');
         $writer = new Xlsx($spreadsheet);
         $filename = 'Glazing_System_selected_' . now()->format('Ymd_His') . '.xlsx';
 

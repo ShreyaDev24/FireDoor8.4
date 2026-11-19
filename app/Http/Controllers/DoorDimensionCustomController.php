@@ -260,6 +260,7 @@ class DoorDimensionCustomController extends Controller
         }
 
         $row = 2;
+        $exportRecordIds = [];
 
         foreach ($items as $item) {
 
@@ -282,6 +283,7 @@ class DoorDimensionCustomController extends Controller
             }
 
             $sheet->fromArray($data, NULL, 'A' . $row);
+            $exportRecordIds[] = $item->id;
 
             $row++;
         }
@@ -294,6 +296,12 @@ class DoorDimensionCustomController extends Controller
             ->getAllBorders()
             ->setBorderStyle(Border::BORDER_THIN);
 
+        \App\Support\SelectedOptionExportColumns::append(
+            $sheet,
+            $exportRecordIds,
+            'door_dimension_custom',
+            $leafTypes->pluck('id')->map(static fn ($id) => (int) $id)->all()
+        );
         $writer = new Xlsx($spreadsheet);
         $filename = 'door_dimensions_Custom_selected_' . now()->format('Ymd_His') . '.xlsx';
 

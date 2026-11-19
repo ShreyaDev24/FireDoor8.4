@@ -289,6 +289,7 @@ class ScreenGlazingTypeController extends Controller
         $sheet->getColumnDimension('I')->setWidth(18);
 
         $row = 2;
+        $exportRecordIds = [];
 
         foreach ($items as $item) {
 
@@ -301,6 +302,7 @@ class ScreenGlazingTypeController extends Controller
             $sheet->setCellValue('G'.$row, $item->BeadingWidth);
             $sheet->setCellValue('H'.$row, $item->FixingDetails);
             $sheet->setCellValue('I'.$row, number_format($item->glazingSelectedPrice ?? 0, 2));
+            $exportRecordIds[] = $item->id;
 
             $row++;
         }
@@ -313,6 +315,7 @@ class ScreenGlazingTypeController extends Controller
             ->getAllBorders()
             ->setBorderStyle(Border::BORDER_THIN);
 
+        \App\Support\SelectedOptionExportColumns::append($sheet, $exportRecordIds, 'side_screen_glazing');
         $writer = new Xlsx($spreadsheet);
         $filename = 'Screen_Glazing_System_selected_' . now()->format('Ymd_His') . '.xlsx';
 
