@@ -86,6 +86,9 @@ Auth::routes();
 
 Route::middleware(['auth', 'user.type'])->group(function () {
 
+    Route::post('options/selected/import-prices', [\App\Http\Controllers\SelectedOptionPriceImportController::class, 'import'])
+        ->name('selected-options.importPrices');
+
     Route::post('options/door-leaf-facing/export-selected', [DoorLeafFacingController::class, 'exportSelected'])
     ->name('door-leaf-facing.exportSelected');
     Route::resource('options/door-leaf-facing', DoorLeafFacingController::class)->middleware('auth');

@@ -148,6 +148,7 @@ class FinishCostController extends Controller
         $sheet->getColumnDimension('E')->setWidth(15);
 
         $row = 2;
+        $exportRecordIds = [];
 
         foreach ($items as $item) {
 
@@ -156,6 +157,7 @@ class FinishCostController extends Controller
             $sheet->setCellValue('C'.$row, str_replace('_',' ',$item->UnderAttribute));
             $sheet->setCellValue('D'.$row, $item->OptionValue);
             $sheet->setCellValue('E'.$row, number_format($item->SelectedOptionCost ?? 0, 2));
+            $exportRecordIds[] = $item->id;
 
             $row++;
         }
@@ -168,6 +170,7 @@ class FinishCostController extends Controller
             ->getAllBorders()
             ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
+        \App\Support\SelectedOptionExportColumns::append($sheet, $exportRecordIds, 'finish_cost');
         $writer = new Xlsx($spreadsheet);
 
         $filename = 'Options_selected_' . now()->format('Ymd_His') . '.xlsx';

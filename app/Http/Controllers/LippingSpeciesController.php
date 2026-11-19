@@ -134,6 +134,7 @@ class LippingSpeciesController extends Controller
         $sheet->getColumnDimension('E')->setWidth(18);
 
         $row = 2;
+        $exportRecordIds = [];
 
         foreach ($items as $species) {
 
@@ -148,6 +149,7 @@ class LippingSpeciesController extends Controller
                     $sheet->setCellValue('C'.$row, number_format($item->thickness * 25.4, 1));
                     $sheet->setCellValue('D'.$row, $item->status ? 'Active' : 'Inactive');
                     $sheet->setCellValue('E'.$row, number_format($selected->selected_price ?? 0, 2));
+                    $exportRecordIds[] = $item->id;
 
                     $row++;
                 }
@@ -162,6 +164,7 @@ class LippingSpeciesController extends Controller
             ->getAllBorders()
             ->setBorderStyle(Border::BORDER_THIN);
 
+        \App\Support\SelectedOptionExportColumns::append($sheet, $exportRecordIds, 'timber_species');
         $writer = new Xlsx($spreadsheet);
 
         $filename = 'Timber_Species_Selected_' . now()->format('Ymd_His') . '.xlsx';

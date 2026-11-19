@@ -66,6 +66,7 @@
             <button id="exportSelected" class="btn btn-info">
                 <i class="fa fa-download"></i> Export Selected
             </button>
+            @include('SelectedOptions.partials.import_excel_button')
         </div>
         @endif
          @if(Auth::user()->UserType == 1)
@@ -504,6 +505,8 @@ function chooseOptionCost(input) {
 }
 </script>
 
+
+@include('SelectedOptions.partials.import_excel_script', ['selectedImportModule' => 'glazing_system'])
 
 @endsection
 

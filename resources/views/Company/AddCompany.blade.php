@@ -243,7 +243,7 @@
                                                             name="selectSelectedOptionAll"
                                                             id="selectSelectedOptionAll"
                                                             value="1">
-                                                        Select All Default Leaf Types
+                                                        Select All Default Selected Options
                                                     </label>
                                                 </div>
                                                 @endif

@@ -298,6 +298,7 @@ class ColourListController extends Controller
             $sheet->getColumnDimension('G')->setWidth(15);
 
             $row = 2;
+            $exportRecordIds = [];
 
             foreach ($items as $item) {
 
@@ -308,6 +309,7 @@ class ColourListController extends Controller
                 $sheet->setCellValue('E'.$row, $item->doorConfiguration);
                 $sheet->setCellValue('F'.$row, $item->DoorLeafFacingValue);
                 $sheet->setCellValue('G'.$row, number_format($item->SelectedPrice ?? 0, 2));
+                $exportRecordIds[] = $item->id;
 
                 $row++;
             }
@@ -320,6 +322,7 @@ class ColourListController extends Controller
                 ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
 
+            \App\Support\SelectedOptionExportColumns::append($sheet, $exportRecordIds, 'colour_list');
             $writer = new Xlsx($spreadsheet);
             $filename = 'Color_selected_' . now()->format('Ymd_His') . '.xlsx';
 

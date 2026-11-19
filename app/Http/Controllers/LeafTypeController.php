@@ -208,6 +208,7 @@ class LeafTypeController extends Controller
             })
             ->whereIn('leaf_type.id', $ids)
             ->select(
+                'leaf_type.id',
                 'leaf_type.LeafType',
                 'leaf_type.VicaimaDoorCore',
                 'leaf_type.Seadec',
@@ -238,6 +239,7 @@ class LeafTypeController extends Controller
         $sheet->getColumnDimension('F')->setWidth(18);
 
         $row = 2;
+        $exportRecordIds = [];
 
         foreach ($items as $item) {
             $sheet->setCellValue('A'.$row, $item->LeafType);
@@ -246,6 +248,7 @@ class LeafTypeController extends Controller
             $sheet->setCellValue('D'.$row, $item->Deanta ? 'Yes' : 'No');
             $sheet->setCellValue('E'.$row, $item->MMM ? 'Yes' : 'No');
             $sheet->setCellValue('F'.$row, number_format($item->selectedPrice ?? 0, 2));
+            $exportRecordIds[] = $item->id;
 
             $row++;
         }
@@ -257,6 +260,7 @@ class LeafTypeController extends Controller
             ->getAllBorders()
             ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
+        \App\Support\SelectedOptionExportColumns::append($sheet, $exportRecordIds, 'leaf_type');
         $writer = new Xlsx($spreadsheet);
         $filename = 'leaf_types_selected_'.now()->format('Ymd_His').'.xlsx';
 

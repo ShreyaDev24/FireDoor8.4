@@ -278,6 +278,7 @@ class ScreenGlassTypeController extends Controller
         $sheet->getColumnDimension('L')->setWidth(18);
 
         $row = 2;
+        $exportRecordIds = [];
 
         foreach ($items as $item) {
 
@@ -293,6 +294,7 @@ class ScreenGlassTypeController extends Controller
             $sheet->setCellValue('J'.$row, $item->AreaSize);
             $sheet->setCellValue('K'.$row, $item->FrameDensity);
             $sheet->setCellValue('L'.$row, number_format($item->glassSelectedPrice ?? 0, 2));
+            $exportRecordIds[] = $item->id;
 
             $row++;
         }
@@ -305,6 +307,7 @@ class ScreenGlassTypeController extends Controller
             ->getAllBorders()
             ->setBorderStyle(Border::BORDER_THIN);
 
+        \App\Support\SelectedOptionExportColumns::append($sheet, $exportRecordIds, 'side_screen_glass');
         $writer = new Xlsx($spreadsheet);
         $filename = 'Screen_Glass_Type_selected_' . now()->format('Ymd_His') . '.xlsx';
 

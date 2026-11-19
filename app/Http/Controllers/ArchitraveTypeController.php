@@ -258,6 +258,7 @@ class ArchitraveTypeController extends Controller
         $sheet->getColumnDimension('J')->setWidth(18);
 
         $row = 2;
+        $exportRecordIds = [];
 
         foreach ($items as $item) {
             $sheet->setCellValue('A'.$row, $item->ArchitraveType);
@@ -270,6 +271,7 @@ class ArchitraveTypeController extends Controller
             $sheet->setCellValue('H'.$row, $item->Deanta ? 'Yes' : 'No');
             $sheet->setCellValue('I'.$row, $item->MMM ? 'Yes' : 'No');
             $sheet->setCellValue('J'.$row, number_format($item->selectedPrice ?? 0, 2));
+            $exportRecordIds[] = $item->id;
 
             $row++;
         }
@@ -282,6 +284,7 @@ class ArchitraveTypeController extends Controller
             ->getAllBorders()
             ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
+        \App\Support\SelectedOptionExportColumns::append($sheet, $exportRecordIds, 'architrave_type');
         $writer = new Xlsx($spreadsheet);
         $filename = 'architrave_types_selected_' . now()->format('Ymd_His') . '.xlsx';
 
