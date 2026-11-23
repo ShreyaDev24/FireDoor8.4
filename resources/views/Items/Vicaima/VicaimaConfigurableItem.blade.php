@@ -319,6 +319,7 @@
                     @endif
                 </div>
                 </form>
+                @include('Items.partials.openIronmongeryEdit')
                 <div class="tab-content" id="opDiv">
                     <div id="door" class="tab-pane active">
                         <div id='container'></div>

@@ -260,6 +260,7 @@
                     @endif -->
                 </div>
                 </form>
+                @include('Items.partials.openIronmongeryEdit')
                 <div class="tab-content" id="opDiv">
                     <div id="BuildOfMaterial" class="tab-pane active table-responsive">
                         {{--<table id="BuildOfMaterialDetails" class="table table-bordered table-striped"></table>--}}

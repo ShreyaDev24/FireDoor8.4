@@ -49,9 +49,16 @@
                             @endif
                             </label>
                             <label for="select_ironmogery_set" style="display: none;">Select Ironmongery Set</label>
-                            <select name="IronmongeryID" id="IronmongeryID" class="form-control" @if(empty($Item['IronmongerySet']) || $Item['IronmongerySet'] == "No") {{'disabled'}} @endif>
-                                <option value="">Select Ironmongery Set</option>
-                            </select>
+                            <div class="d-flex align-items-center">
+                                <select name="IronmongeryID" id="IronmongeryID" class="form-control" @if(empty($Item['IronmongerySet']) || $Item['IronmongerySet'] == "No") {{'disabled'}} @endif>
+                                    <option value="">Select Ironmongery Set</option>
+                                </select>
+                                <button type="button"
+                                        class="btn btn-info ml-2 editSelectedIronmongery"
+                                        title="Edit Ironmongery">
+                                    Edit
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
