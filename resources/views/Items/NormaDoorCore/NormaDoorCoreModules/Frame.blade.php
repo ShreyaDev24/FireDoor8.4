@@ -364,7 +364,7 @@
                                             </div> -->
 
 
-                                            {{-- <div class="col-md-6">
+                                            <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label for="ironmongerySet">Ironmongery Set
                                                     @if(!empty($tooltip->ironmongerySet))
@@ -392,19 +392,26 @@
                                                     </script>
                                                     @endif
                                                     </label>
-                                                    <select name="IronmongeryID" id="IronmongeryID" class="form-control" @if(empty($Item['IronmongerySet']) || $Item['IronmongerySet'] == "No") {{'disabled'}} @endif>
-                                                        <option value="">Select Ironmongery Set</option>
-                                                        @if(!empty($setIronmongery))
-                                                        @foreach($setIronmongery as $setIronmongerys)
-                                                            <option value="{{$setIronmongerys->id}}"
-                                                            @if(isset($Item['IronmongeryID'])) @if($Item['IronmongeryID'] == $setIronmongerys->id) {{'selected'}} @endif @endif>{{$setIronmongerys->Setname}}</option>
-                                                        @endforeach
-                                                        @endif
-                                                    </select>
+                                                    <div class="d-flex align-items-center">
+                                                        <select name="IronmongeryID" id="IronmongeryID" class="form-control" @if(empty($Item['IronmongerySet']) || $Item['IronmongerySet'] == "No") {{'disabled'}} @endif>
+                                                            <option value="">Select Ironmongery Set</option>
+                                                            @if(!empty($setIronmongery))
+                                                            @foreach($setIronmongery as $setIronmongerys)
+                                                                <option value="{{$setIronmongerys->id}}"
+                                                                @if(isset($Item['IronmongeryID'])) @if($Item['IronmongeryID'] == $setIronmongerys->id) {{'selected'}} @endif @endif>{{$setIronmongerys->Setname}}</option>
+                                                            @endforeach
+                                                            @endif
+                                                        </select>
+                                                        <button type="button"
+                                                                class="btn btn-info ml-2 editSelectedIronmongery"
+                                                                title="Edit Ironmongery">
+                                                            Edit
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-6">
+                                            {{-- <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label for="specialFeatureRefs">Special Feature Refs
                                                     @if(!empty($tooltip->specialFeatureRefs))
