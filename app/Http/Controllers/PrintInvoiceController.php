@@ -3204,6 +3204,14 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                 <tr>
                                     <td class="dicription_grey">S.O. Depth</td>
                                     <td class="dicription_blank">' . $tt->SOWallThick . '</td>
+                                </tr>
+                                <tr>
+                                    <td class="dicription_grey">Leaf Width</td>
+                                    <td class="dicription_blank">' . $tt->LeafWidth1 . '</td>
+                                </tr>
+                                <tr>
+                                    <td class="dicription_grey">Leaf Height</td>
+                                    <td class="dicription_blank">' . $tt->LeafHeight . '</td>
                                 </tr>';
             }
 
