@@ -3829,7 +3829,15 @@ function frameExport($request,$userIds,$userLoginId): void{
                 $frame_unit = 'Each';
                 $QtyPerDoorType = $LM;
 
-                $total_cost = ($LM*$unit_cost) * $request->architraveSetQty;
+                $architraveSetQty = (float) ($request->architraveSetQty ?: 1);
+
+                // For Double Doors, LM already includes both sides.
+                // Do not multiply by 2 again.
+                if ($request->doorsetType == 'DD') {
+                    $architraveSetQty = 1;
+                }
+
+                $total_cost = ($LM * $unit_cost) * $architraveSetQty;
 
                 SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType,$total_cost,$request->architraveSetQty, true);
 
