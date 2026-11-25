@@ -3247,7 +3247,7 @@ function commonGeneralLabourCost($request,$userIds): void{
                 }
             }
 
-            if ((!empty($request->leaf1VisionPanel) && $request->leaf1VisionPanel == "Yes") || (!empty($request->leaf2VisionPanel) && $request->leaf2VisionPanel == "Yes") && ($request->doorLeafFinish == "Paint_Finish" || $request->doorLeafFinish == "Painted") && $GeneralLabourCost->DoorLeafFinishPainted2 == 1) {
+            if (((!empty($request->leaf1VisionPanel) && $request->leaf1VisionPanel == "Yes") || (!empty($request->leaf2VisionPanel) && $request->leaf2VisionPanel == "Yes")) && ($request->doorLeafFinish == "Paint_Finish" || $request->doorLeafFinish == "Painted") && $GeneralLabourCost->DoorLeafFinishPainted2 == 1) {
                 $data = getMyLaborCost('DoorLeafFinishPainted2', $GeneralLabourCost->genLaborCost);
                 $description = "Painting of glazing bead |".($GeneralLabourCost->DoorLeafFinishPainted2ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafFinishPainted2MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->DoorLeafFinishPainted2ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafFinishPainted2MachineMinutes * ($data->labour_cost_per_machine/ 60));
