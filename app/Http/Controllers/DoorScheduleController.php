@@ -9970,7 +9970,10 @@ private function getQuotationGrandTotal($quotationId, $versionId)
         $unit_cost = $adjustValue;
 
         // 🔹 Quantity calculation
-        if ($request->doorsetType == 'DD') {
+        // The request never carries doorsetType (the modal only posts itemId etc.), so read it
+        // from the stored item. DD and leaf-and-a-half both have two leaves to price.
+        $doorsetType = $request->doorsetType ?: Item::where('itemId', $request->itemId)->value('DoorsetType');
+        if ($doorsetType == 'DD' || $doorsetType == 'leaf_and_a_half') {
             $quantity_of_door_type = 2 * $ItemMaster;
             $qtyOfD = 2 * $ItemMaster;
         } else {
