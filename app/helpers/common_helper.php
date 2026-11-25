@@ -2656,18 +2656,17 @@ function SaveBOMCalculation($userIds, $request, $category, $frame_unit, string $
 
         break;
 
-        case "LeafSetBesPoke":
-            if($request->doorsetType == 'DD'){
-                $quantity_of_door_type = 2 * $ItemMaster;
-                $qtyOfD = 2 * $ItemMaster;
-            }else{
-                $quantity_of_door_type = 1 * $ItemMaster;
-                $qtyOfD = 1 * $ItemMaster;
-            }
+       case "LeafSetBesPoke":
+
+            // Unit cost already includes both leaves for DD and leaf-and-a-half.
+            // Quantity must represent the number of doorsets, not individual leaves.
+            $quantity_of_door_type = $ItemMaster;
+            $qtyOfD = $ItemMaster;
 
             $isTotalCounted = true;
             $total_cost = $unit_cost * $qtyOfD;
-            break;
+
+        break;
 
         case ("Accoustics" || "Glass" || "Architrave" || "Frame" || "GlazingSystem" || "IntumescentSeal"):
             $quantity_of_door_type = 1 * $ItemMaster;
@@ -3115,7 +3114,7 @@ function commonGeneralLabourCost($request,$userIds): void{
                 }
             }
 
-            if (($request->doorLeafFinish == "Paint_Finish" || $request->doorLeafFinish == "Painted") && $GeneralLabourCost->DoorLeafFinishPainted2 == 1) {
+            if ((!empty($request->leaf1VisionPanel) && $request->leaf1VisionPanel == "Yes") || (!empty($request->leaf2VisionPanel) && $request->leaf2VisionPanel == "Yes") && ($request->doorLeafFinish == "Paint_Finish" || $request->doorLeafFinish == "Painted") && $GeneralLabourCost->DoorLeafFinishPainted2 == 1) {
                 $data = getMyLaborCost('DoorLeafFinishPainted2', $GeneralLabourCost->genLaborCost);
                 $description = "Painting of glazing bead |".($GeneralLabourCost->DoorLeafFinishPainted2ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafFinishPainted2MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->DoorLeafFinishPainted2ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafFinishPainted2MachineMinutes * ($data->labour_cost_per_machine/ 60));
@@ -3182,29 +3181,34 @@ function commonGeneralLabourCost($request,$userIds): void{
                 SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
 
+            $glazingBead = $request->GlazingBeads ?? '';
+
+            $isHockeyStick = str_ends_with($glazingBead, '_Boleaction');
+            $isFlush = str_ends_with($glazingBead, '_Flush');
+
             //vision panel and fire rating
-            if (($request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD30" || $request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD30s") && $GeneralLabourCost->VisionPanelandFireRatingFD30 == 1) {
+            if (($request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD30" || $request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD30s") && $GeneralLabourCost->VisionPanelandFireRatingFD30 == 1 && $isHockeyStick) {
                 $data = getMyLaborCost('VisionPanelandFireRatingFD30', $GeneralLabourCost->genLaborCost);
                 $description = "VP2 (Hockey Stick) - FD30 Fit |".($GeneralLabourCost->VisionPanelandFireRatingFD30ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRatingFD30MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->VisionPanelandFireRatingFD30ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRatingFD30MachineMinutes * ($data->labour_cost_per_machine/ 60));
                 SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
 
-            if (($request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD60" || $request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD60s") && $GeneralLabourCost->VisionPanelandFireRatingFD60 == 1) {
+            if (($request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD60" || $request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD60s") && $GeneralLabourCost->VisionPanelandFireRatingFD60 == 1 && $isHockeyStick) {
                 $data = getMyLaborCost('VisionPanelandFireRatingFD60', $GeneralLabourCost->genLaborCost);
                 $description = "VP2 (Hockey Stick) - FD60 Fit |".($GeneralLabourCost->VisionPanelandFireRatingFD60ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRatingFD60MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->VisionPanelandFireRatingFD60ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRatingFD60MachineMinutes * ($data->labour_cost_per_machine/ 60));
                 SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
 
-            if (($request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD30" || $request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD30s") && $GeneralLabourCost->VisionPanelandFireRating2FD30 == 1) {
+            if (($request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD30" || $request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD30s") && $GeneralLabourCost->VisionPanelandFireRating2FD30 == 1 && $isFlush) {
                 $data = getMyLaborCost('VisionPanelandFireRating2FD30', $GeneralLabourCost->genLaborCost);
                 $description = "VP2 (Flush) - FD30 Fit |".($GeneralLabourCost->VisionPanelandFireRating2FD30ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRating2FD30MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->VisionPanelandFireRating2FD30ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRating2FD30MachineMinutes * ($data->labour_cost_per_machine/ 60));
                 SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
 
-            if (($request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD60" || $request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD60s") && $GeneralLabourCost->VisionPanelandFireRating2FD60 == 1) {
+            if (($request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD60" || $request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD60s") && $GeneralLabourCost->VisionPanelandFireRating2FD60 == 1 && $isFlush) {
                 $data = getMyLaborCost('VisionPanelandFireRating2FD60', $GeneralLabourCost->genLaborCost);
                 $description = "VP2 (Flush) - FD60 Fit |".($GeneralLabourCost->VisionPanelandFireRating2FD60ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRating2FD60MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->VisionPanelandFireRating2FD60ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRating2FD60MachineMinutes * ($data->labour_cost_per_machine/ 60));
@@ -4069,9 +4073,6 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
         $frame_unit = 'Area M2';
 
         $unit_cost = $frame_unit_cost->selectedPrice ?? 0;
-        if ($request->doorsetType == 'DD' || $request->doorsetType == 'leaf_and_a_half') {
-            $unit_cost += $frame_unit_cost->selectedPrice ?? 0;
-        }
         SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
 
     }else if($request->leaf2VisionPanel == 'Yes' && !empty($request->visionPanelQuantityforLeaf2) && !empty($request->issingleconfiguration) && !empty($request->glassType)){
@@ -4096,9 +4097,6 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
         $category = 'Glass';
         $frame_unit = 'Area M2';
         $unit_cost = $frame_unit_cost->selectedPrice ?? 0;
-        if ($request->doorsetType == 'DD' || $request->doorsetType == 'leaf_and_a_half') {
-            $unit_cost += $frame_unit_cost->selectedPrice ?? 0;
-        }
         SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
     }
 
