@@ -3181,7 +3181,7 @@ function commonGeneralLabourCost($request,$userIds): void{
                 SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
 
-            $glazingBead = $request->GlazingBeads ?? '';
+            $glazingBead = $request->glazingBeads ?? '';
 
             $isHockeyStick = str_ends_with($glazingBead, '_Boleaction');
             $isFlush = str_ends_with($glazingBead, '_Flush');
