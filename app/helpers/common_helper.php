@@ -4544,7 +4544,7 @@ function MachiningCostExport($request,$userIds,$userLoginId): void{
 }
 
 function LeafSetBesPoke($request,$userIds,string $configurationDoor){
-    if(!empty($request->issingleconfiguration) && !empty($request->doorLeafFacing) && !empty($request->doorLeafFinish)){
+    if(!empty($request->issingleconfiguration) && !empty($request->doorLeafFacing)){
         $doorConfiguration = configurationDoor($request->issingleconfiguration);
         $SelectedOption = SelectedOption::wherein('SelectedUserId', $userIds)->where('configurableitems',$request->issingleconfiguration)->get();
         if ($request->fireRating == 'FD30' || $request->fireRating == 'FD30s') {
@@ -4732,6 +4732,22 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
             ->where('color.DoorLeafFacing',$request->doorLeafFacing)->where('color.ColorName',$request->doorLeafFinish)
             ->where('selected_color.SelectedUserId',Auth::user()->id)
             ->get()->first();
+            $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * ($doorLeafFinish->SelectedPrice??0);
+            $finishRatePerM2 = is_numeric($doorLeafFinish->SelectedPrice ?? null) ? (float)$doorLeafFinish->SelectedPrice : 0;
+        }elseif($request->doorLeafFacing == 'Raw'){
+
+            // $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacingValue)->first()->SelectedOptionCost;
+            // NOTE: door_leaf_facing.Key is only unique WITHIN a doorLeafFacing category — must
+            // filter by category too, or ->first() can silently grab a different category's price.
+            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.doorLeafFacing',$request->doorLeafFacing)->where('door_leaf_facing.Key',$request->doorLeafFacing)->first();
+            if(empty($doorLeafFacing->selectedPrice)){
+                $doorLeafFacing->selectedPrice = 0;
+            }
+
+            $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
+            $facingRatePerM2 = is_numeric($doorLeafFacing->selectedPrice) ? (float)$doorLeafFacing->selectedPrice : 0;
+
+            $doorLeafFinish = '';
             $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * ($doorLeafFinish->SelectedPrice??0);
             $finishRatePerM2 = is_numeric($doorLeafFinish->SelectedPrice ?? null) ? (float)$doorLeafFinish->SelectedPrice : 0;
         }

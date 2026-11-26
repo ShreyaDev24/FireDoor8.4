@@ -23,6 +23,9 @@
                     <option value="PVC" {{ $selectedDoorLeaf == 'PVC' ? 'selected' : '' }}>
                         PVC
                     </option>
+                    <option value="Raw" {{ $selectedDoorLeaf == 'Raw' ? 'selected' : '' }}>
+                        Raw
+                    </option>
 
                     {{-- Vicaima --}}
                     @if(!empty($leaftypevicima))
